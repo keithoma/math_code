@@ -41,15 +41,26 @@ def main():
     """
     DEMONSTRATION.
     """
-    x_axis = np.linspace(0, 10, 500)
-    sin    = [np.sin(x) for x in x_axis]
-    data_points = [[x, np.sin(x)] for x in np.linspace(0, 9, 8)]
-    obj = LinearSplineInterpolation(data_points)
+    def runge_function(x):
+        return 1 / (1 + 25 * x ** 2)
 
-    plt.plot(x_axis, sin)
-    plt.plot(*obj.construct_spline())
-    plt.show()
+    def plot_runge_interpolation(n):
+        x_axis = np.linspace(-1, 1, 500)
+        y_axis = [runge_function(x) for x in x_axis]
 
+        data_points = [[x, runge_function(x)] for x in np.linspace(-1, 1, n)]
+        LSI = LinearSplineInterpolation(data_points)
+
+        plt.plot(x_axis, y_axis)
+        plt.plot(*LSI.construct_spline())
+        plt.title("Number of nodes: {}".format(n))
+        plt.show()
+
+    for n in range(2, 22, 2):
+        plot_runge_interpolation(n)
+    
+    for n in range(3, 23, 2):
+        plot_runge_interpolation(n)
 
 if __name__ == "__main__":
     main()
