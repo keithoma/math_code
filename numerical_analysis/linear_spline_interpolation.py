@@ -41,26 +41,35 @@ def main():
     """
     DEMONSTRATION.
     """
-    def runge_function(x):
-        return 1 / (1 + 25 * x ** 2)
+    # make this shorter
+    def demonstration(f, n, setting={"range": [-1, 1], "fineness": 500}):
+        x_axis = np.linspace(*setting["range"], setting["fineness"])
+        y_axis = [f(x) for x in x_axis]
 
-    def plot_runge_interpolation(n):
-        x_axis = np.linspace(-1, 1, 500)
-        y_axis = [runge_function(x) for x in x_axis]
-
-        data_points = [[x, runge_function(x)] for x in np.linspace(-1, 1, n)]
-        LSI = LinearSplineInterpolation(data_points)
+        LSI = LinearSplineInterpolation([[x, f(x)] for x in np.linspace(*setting["range"], n)])
 
         plt.plot(x_axis, y_axis)
         plt.plot(*LSI.construct_spline())
         plt.title("Number of nodes: {}".format(n))
         plt.show()
 
+    # demonstration with x * sin(x)
+    wider_range = {"range": [-10, 10], "fineness": 500}
+    demonstration(lambda x: x * np.sin(x), 10, setting=wider_range)
+    demonstration(lambda x: x * np.sin(x), 20, setting=wider_range)
+
+    # demonstration with the Runge function
+    def runge_function(x):
+        return 1 / (1 + 25 * (x ** 2))
+
     for n in range(2, 22, 2):
-        plot_runge_interpolation(n)
-    
+        demonstration(runge_function, n)
+
     for n in range(3, 23, 2):
-        plot_runge_interpolation(n)
+        demonstration(runge_function, n)
+
+    for n in range(3, 23, 2):
+        demonstration(runge_function, n, setting=wider_range)
 
 if __name__ == "__main__":
     main()
