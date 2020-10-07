@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-6th of October 2020
+7th of October 2020
 """
 
 import matplotlib.pyplot as plt
