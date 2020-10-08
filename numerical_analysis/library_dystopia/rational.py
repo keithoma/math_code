@@ -10,7 +10,7 @@ import copy
 import math
 
 class Rational():
-    def __init__(self, numerator, denominator, sign=1):
+    def __init__(self, numerator, denominator=1, sign=1):
         """
         Arguments:
             n (int) : numerator
@@ -98,6 +98,8 @@ def main():
     print(first)
     print(second)
     print(first - second)
+    third = Rational(100000)
+    print(third)
 
 if __name__ == "__main__":
     main()
