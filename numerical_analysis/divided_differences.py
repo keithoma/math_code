@@ -10,7 +10,7 @@ class DividedDifference():
     def __init__(self):
         # default setting
         self.stg = {
-            "length"          : 4,
+            "length"          : 5,
             "loc"             : 0.0,
             "scale"           : 20.0,
             "initial-decimal" : 0,

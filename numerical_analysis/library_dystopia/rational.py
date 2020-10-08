@@ -10,12 +10,15 @@ import copy
 import math
 
 class Rational():
-    def __init__(self, numerator, denominator=1, sign=1):
+    # TODO
+    # printing lists with obj
+    def __init__(self, numerator, denominator=1, sign=1, stg={"handle" : "auto"}):
         """
         Arguments:
             n (int) : numerator
             d (int) : denominator
             sign (int) : sign, 1 for positive and -1 for negative
+            stg (dict) : settings
         """
         # check here for valid arguments
         # TODO
@@ -24,6 +27,10 @@ class Rational():
         self.sign         = sign
         self.numerator    = numerator
         self.denominator  = denominator
+        self.stg          = stg
+
+        if self.stg["handle"] == "auto":
+            self.handle_all()
 
     # fraction handling
     def handle_sign(self):
@@ -88,7 +95,7 @@ class Rational():
         return Rational(self.numerator * other.numerator, self.denominator * other.denominator,
                         sign=self.sign * other.sign)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return Rational(self.numerator * other.denominator, self.denominator * other.numerator,
                 sign=self.sign * other.sign)
 
