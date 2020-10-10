@@ -54,11 +54,19 @@ RNL Rational::ConstructLight(int n, int d) {
 }
 
 string Rational::StringTerminal(RNL q) {
-
+    if (q.sign == Sign::positive) {
+        return to_string(q.numerator) + " / " + to_string(q.denominator);
+    } else {
+        return "-" + to_string(q.numerator) + " / " + to_string(q.denominator);
+    }
 }
 
 string Rational::StringLatex(RNL q) {
-
+    string str = "\\frac{}{}";
+    str = str.replace(8, 0, to_string(q.denominator));
+    str = str.replace(6, 0, to_string(q.numerator));
+    if (q.sign == Sign::negative) { str = str.replace(0, 0, "-"); };
+    return str;
 }
 
 
@@ -73,9 +81,10 @@ pair<unsigned, unsigned> Rational::ReduceFraction(unsigned n, unsigned d) {
 
 int main() {
     RationalNumberLight a = Rational::ConstructLight(15, 3);
-    cout << a.numerator << "\n";
-    cout << a.denominator << "\n";
-    cout << "something new" << "\n";
-    // cout << a.StringTerminal();
+    RationalNumberLight b = Rational::ConstructLight(13, -3000);
+    cout << Rational::StringTerminal(a) << "\n";
+    cout << Rational::StringTerminal(b) << "\n";
+    cout << "\n\n";
+    cout << Rational::StringLatex(b);
     return 0;
 }
