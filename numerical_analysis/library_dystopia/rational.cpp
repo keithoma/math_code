@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <string>
 
 using namespace std;
 
@@ -10,15 +11,23 @@ class Rational {
               denominator_{denominator},
               sign_{sign}
         {}
-        int sign() { return sign_; }
+
         float numerator() { return numerator_; }
         float denominator() { return denominator_; }
+        int sign() { return sign_; }
+
         Rational reduce_fraction();
+        Rational handle_sign();
+        Rational handle_float();
+        Rational handle_all();
+
+        string string_terminal();
+        string string_latex();
 
     private:
-        int sign_;
         float numerator_;
         float denominator_;
+        int sign_;
 
         float gcd(float n, float m) { return (m == 0) ? n : gcd(m, fmod(n, m)); }
 };
