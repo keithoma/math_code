@@ -6,7 +6,6 @@
 
 #include <cmath>
 #include <iostream>
-#include <format>
 #include <string>
 #include <utility>
 
