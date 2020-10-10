@@ -1,10 +1,12 @@
 
 /**
- * 9th October 2020
+ * 10th October 2020
  * things to do: write handle float, string functions
  */
 
+#include <cmath>
 #include <iostream>
+#include <format>
 #include <string>
 #include <utility>
 
@@ -17,72 +19,64 @@ enum class Sign {
 
 // light version for computing
 struct RationalNumberLight {
-    RationalNumberLight(unsigned numerator, unsigned denominator, Sign sign)
-        : numerator_{numerator},
-          denominator_{denominator},
-          sign_{sign}
+    RationalNumberLight(unsigned n, unsigned d, Sign s)
+        : numerator{n},
+          denominator{d},
+          sign{s}
     {}
-    const unsigned short numerator_;
-    const unsigned short denominator_;
-    const Sign sign_;
-};
-
-// flexible version
-struct RationalNumberFlex {
-    RationalNumberFlex(float numerator, float denominator, Sign sign)
-        : numerator_{numerator},
-          denominator_{denominator},
-          sign_{sign}
-    {}
-    float numerator_;
-    float denominator_;
-    const Sign sign_;
+    const unsigned short numerator;
+    const unsigned short denominator;
+    const Sign sign;
 };
 
 using RNL = RationalNumberLight;
-using RNF = RationalNumberFlex;
+
+// here, we could have a heavier but more flexible version of the struct above, the RationalNumberFlex
 
 class Rational {
     public:
-        static RNL ConstructLight(float n, float d=1.0);
+        static RNL ConstructLight(int n, int d=1);
         // static RNF ConstructFlex(float n, float d=1.0);
 
         static string StringTerminal(RNL q);
         static string StringLatex(RNL q);
 
     private:
-        unsigned gcd(unsigned n, unsigned m) { return (m == 0) ? n : gcd(m, n % m); }
-
-        Sign HandleSign(float n, float d);
-        pair<unsigned, unsigned> HandleFloat(float n, float d);
-        pair<unsigned, unsigned> ReduceFraction(unsigned n, unsigned d);
+        static unsigned gcd(unsigned n, unsigned m) { return (m == 0) ? n : gcd(m, n % m); }
+        static Sign HandleSign(int n, int d);
+        static pair<unsigned, unsigned> ReduceFraction(unsigned n, unsigned d);
 };
 
-RNL constructLight(float n, float d=1.0) {
-    const Sign sign = handle_sign(n, d);
-    const pair<unsigned, unsigned> num_den = reduce_fraction(static_cast<unsigned> (n),
-                                                             static_cast<unsigned> (d));
+RNL Rational::ConstructLight(int n, int d) {
+    const Sign sign = HandleSign(n, d);
+    const pair<unsigned, unsigned> num_den = ReduceFraction(static_cast<unsigned> (abs(n)),
+                                                            static_cast<unsigned> (abs(d)));
     return RNL {num_den.first, num_den.second, sign};
 }
 
+string Rational::StringTerminal(RNL q) {
 
-Sign handle_sign(float n, float d) {
+}
+
+string Rational::StringLatex(RNL q) {
+
+}
+
+
+Sign Rational::HandleSign(int n, int d) {
     return (((n > 0) - (n < 0)) * ((d > 0) - (d < 0)) == 1) ? Sign::positive : Sign::negative;
 }
 
-pair<unsigned, unsigned> handle_float(float numerator, float denominator) {
-    // do later
-    // for now, we require the arguments to be whole numbers
-}
-
-pair<unsigned, unsigned> reduce_fraction(unsigned numerator, unsigned denominator) {
-    const unsigned div = gcd(numerator, denominator);
-    return make_pair(numerator / div, denominator / div);
+pair<unsigned, unsigned> Rational::ReduceFraction(unsigned n, unsigned d) {
+    const unsigned div = gcd(n, d);
+    return make_pair(n / div, d / div);
 }
 
 int main() {
-    RationalNumberLight a = rational(15, 3);
-    cout << a.numerator_;
-    cout << a.denominator_;
+    RationalNumberLight a = Rational::ConstructLight(15, 3);
+    cout << a.numerator_ << "\n";
+    cout << a.denominator_ << "\n";
+    cout << "something new" << "\n";
+    // cout << a.StringTerminal();
     return 0;
 }
