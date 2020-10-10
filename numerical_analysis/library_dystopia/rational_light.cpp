@@ -73,8 +73,8 @@ pair<unsigned, unsigned> Rational::ReduceFraction(unsigned n, unsigned d) {
 
 int main() {
     RationalNumberLight a = Rational::ConstructLight(15, 3);
-    cout << a.numerator_ << "\n";
-    cout << a.denominator_ << "\n";
+    cout << a.numerator << "\n";
+    cout << a.denominator << "\n";
     cout << "something new" << "\n";
     // cout << a.StringTerminal();
     return 0;
