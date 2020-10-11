@@ -1,7 +1,7 @@
 
 /**
- * 10th October 2020
- * things to do: write handle float, string functions
+ * 11th October 2020
+ * things to do: write handle float
  */
 
 #include <cmath>
@@ -14,6 +14,11 @@ using namespace std;
 enum class Sign {
     positive,
     negative
+};
+
+enum class Mode {
+    light,
+    flex
 };
 
 // light version for computing
@@ -30,12 +35,23 @@ struct RationalNumberLight {
 
 using RNL = RationalNumberLight;
 
-// here, we could have a heavier but more flexible version of the struct above, the RationalNumberFlex
+struct RationalNumberFlex {
+    RationalNumberFlex(float n, float d, Sign s)
+        : numerator{n},
+          denominator{d},
+          sign{s}
+    {}
+    float numerator;
+    float denominator;
+    Sign sign;
+};
+
+using RNF = RationalNumberFlex;
 
 class Rational {
     public:
-        static RNL ConstructLight(int n, int d=1);
-        // static RNF ConstructFlex(float n, float d=1.0);
+        static RNL Construct(int n, int d=1);
+        static RNF Construct(float n, float d=1.0, bool s=false);
 
         static string StringTerminal(RNL q);
         static string StringLatex(RNL q);
@@ -46,19 +62,27 @@ class Rational {
         static pair<unsigned, unsigned> ReduceFraction(unsigned n, unsigned d);
 };
 
-RNL Rational::ConstructLight(int n, int d) {
+RNL Rational::Construct(int n, int d) {
     const Sign sign = HandleSign(n, d);
     const pair<unsigned, unsigned> num_den = ReduceFraction(static_cast<unsigned> (abs(n)),
                                                             static_cast<unsigned> (abs(d)));
     return RNL {num_den.first, num_den.second, sign};
 }
 
-string Rational::StringTerminal(RNL q) {
-    if (q.sign == Sign::positive) {
-        return to_string(q.numerator) + " / " + to_string(q.denominator);
+RNF Rational::Construct(float n, float d, bool s) {
+    if (s == false) {
+        return RNF {n, d, Sign::positive};
     } else {
-        return "-" + to_string(q.numerator) + " / " + to_string(q.denominator);
+        return RNF {n, d, Sign::negative};
     }
+}
+
+string Rational::StringTerminal(RNL q) {
+    string str = "/";
+    str = str.replace(2, 0, to_string(q.denominator));
+    str = str.replace(0, 0, to_string(q.numerator));
+    if (q.sign == Sign::negative) { str = str.replace(0, 0, "-"); };
+    return str;
 }
 
 string Rational::StringLatex(RNL q) {
@@ -80,8 +104,8 @@ pair<unsigned, unsigned> Rational::ReduceFraction(unsigned n, unsigned d) {
 }
 
 int main() {
-    RationalNumberLight a = Rational::ConstructLight(15, 3);
-    RationalNumberLight b = Rational::ConstructLight(13, -3000);
+    RationalNumberLight a = Rational::Construct(15, 3);
+    RationalNumberLight b = Rational::Construct(13, -3000);
     cout << Rational::StringTerminal(a) << "\n";
     cout << Rational::StringTerminal(b) << "\n";
     cout << "\n\n";
