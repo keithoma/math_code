@@ -52,56 +52,80 @@ class LinearSplineInterpolation:
             spline.extend(s)
         return global_grid, spline
 
-    def string_polynomial(self, start, end):
-        sum1 = "{} * {}".format(start[1], end[0] + " - x")
-        sum2 = "{} * {}".format(end[1], ("x - " + start[0]))
-        return "\\frac{{}}{{}}".format(sum1 + sum2, end[0] - start[0])
+    def plot_splines(self):
 
-"""
+        plt.plot(*self.data_exact())
+        plt.plot(*self.data_spline())
+
+        # auxilary lines to indicate the nodes
+        for xi in np.linspace(*self.stg["range"], self.n + 1):
+            plt.axvline(xi, linestyle=":", color="black")
+
+        plt.title("Number of splines (n): {}\n(Number of nodes: {})".format(self.n, self.n + 1))
+        plt.show()
+
+    def string_polynomial(self, start, end):
+        sum1 = "{} * ({})".format(start[1], str(end[0]) + " - x")
+        sum2 = "{} * ({})".format(end[1], ("x - " + str(start[0])))
+        return "\\frac{{{}}}{{{}}}".format(sum1 + " + " + sum2, end[0] - start[0])
+
     def string_spline(self):
         string = ""
-        for i in range(n):
-"""
+        for i in range(self.n):
+            string = (string + "$s_{{{}}} = {}$".format(i, self.string_polynomial(self.data_points[i], self.data_points[i + 1])) +
+                      " for $x \\in [{}, {}]$\n\n".format(self.data_points[i][0], self.data_points[i + 1][0]))
+        return string
+
+    def plot_and_print(self):
+        f, (ax1, ax2) = plt.subplots(1, 2)
+
+        # plot the splines
+        ax1.plot(*self.data_exact())
+        ax1.plot(*self.data_spline())
+
+        # auxilary lines to indicate the nodes
+        for xi in np.linspace(*self.stg["range"], self.n + 1):
+            ax1.axvline(xi, linestyle=":", color="black")
+
+        ax1.set_title("Number of splines (n): {}\n(Number of nodes: {})".format(self.n, self.n + 1))
+
+        # print the splines
+        ax2.text(0.5, 0.5, self.string_spline(), horizontalalignment='center', verticalalignment='center', fontsize=24)
+        ax2.axis('off')
+
+        plt.show()
 
 def main():
     """
     DEMONSTRATION.
     """
-    # make this shorter
-    def debug(f, n, stg=DEFAULT_SETTINGS):
+    def demonstration(f, n, stg=DEFAULT_SETTINGS):
         LSI = LinearSplineInterpolation(f, n, stg)
-        print("n                     = {}".format(LSI.n))
-        print("number of data points = {}".format(len(LSI.data_points)))
-
-    def demonstration(f, n, setting={"range": [-1, 1], "fineness": 500}):
-        LSI = LinearSplineInterpolation(f, n)
-
-        plt.plot(*LSI.data_spline())
-        plt.title("Number of nodes: {}".format(n))
-        plt.show()
-
-    debug(lambda x: 1 + 3 * x ** 3 + 5 * x ** 5, 4)
+        LSI.plot_and_print()
 
     demonstration(lambda x: 1 + 3 * x ** 3 + 5 * x ** 5, 4)
 
 
-    # demonstration with x * sin(x)
-    wider_range = {"range": [-10, 10], "fineness": 500}
-    demonstration(lambda x: x * np.sin(x), 10, setting=wider_range)
-    demonstration(lambda x: x * np.sin(x), 20, setting=wider_range)
 
-    # demonstration with the Runge function
-    def runge_function(x):
-        return 1 / (1 + 25 * (x ** 2))
 
-    for n in range(2, 22, 2):
-        demonstration(runge_function, n)
+    if False:
+        # demonstration with x * sin(x)
+        wider_range = {"range": [-10, 10], "fineness": 500}
+        demonstration(lambda x: x * np.sin(x), 10, stg=wider_range)
+        demonstration(lambda x: x * np.sin(x), 20, stg=wider_range)
 
-    for n in range(3, 23, 2):
-        demonstration(runge_function, n)
+        # demonstration with the Runge function
+        def runge_function(x):
+            return 1 / (1 + 25 * (x ** 2))
 
-    for n in range(3, 23, 2):
-        demonstration(runge_function, n, setting=wider_range)
+        for n in range(2, 22, 2):
+            demonstration(runge_function, n)
+
+        for n in range(3, 23, 2):
+            demonstration(runge_function, n)
+
+        for n in range(3, 23, 2):
+            demonstration(runge_function, n, stg=wider_range)
 
 if __name__ == "__main__":
     main()
