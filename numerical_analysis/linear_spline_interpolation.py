@@ -105,9 +105,6 @@ def main():
 
     demonstration(lambda x: 1 + 3 * x ** 3 + 5 * x ** 5, 4)
 
-
-
-
     if False:
         # demonstration with x * sin(x)
         wider_range = {"range": [-10, 10], "fineness": 500}
