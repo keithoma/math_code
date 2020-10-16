@@ -65,12 +65,10 @@ def main():
         print(_, end=", ")
     print()
 
-    
     while True:
         if input("Show Solution? ").lower()[0] == "y":
             print(divided_difference(x, y))
             break
-
 
 if __name__ == "__main__":
     main()
