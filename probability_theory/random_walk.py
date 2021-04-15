@@ -70,9 +70,9 @@ def plot_random_walks2(n, m=1):
     plt.show()
 
 def main():
-    n = 10 ** 6
+    n = 10 ** 2
     plot_random_walks(n, 3)
-    plot_random_walks2(n, 2)
+    plot_random_walks2(n, 1)
 
 if __name__ == "__main__":
     main()
