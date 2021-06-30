@@ -8,6 +8,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class LagrangeInterpolation():
+    """
+    data (2-dim list): 
+    """
     def __init__(self, data):
         self.data = data
         self.n = len(data[0])
@@ -39,5 +42,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
