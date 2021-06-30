@@ -15,7 +15,6 @@ class LISetting():
         self.show_function      = True
         self.fineness           = 500
 
-
 class LagrangeInterpolation():
     """
     data (2-dim list): 
@@ -78,7 +77,6 @@ class LagrangeInterpolation():
         y_axis = [self.the_function(x) for x in x_axis]
         plt.plot(x_axis, y_axis)
 
-
     def plot(self):
         if self.setting.show_data:
             self.plot_data()
@@ -98,9 +96,9 @@ def main():
     ])
 
     def a_function(x):
-        return np.sin(x) * x
+        return np.e ** np.sin(x)
 
-    LI = LagrangeInterpolation(a_function, (0, 10), 3)
+    LI = LagrangeInterpolation(a_function, (0, 10), 20)
     LI.plot()
 
 if __name__ == "__main__":
