@@ -96,9 +96,9 @@ def main():
     ])
 
     def a_function(x):
-        return np.e ** np.sin(x)
+        return np.sin(x + np.cos(x))
 
-    LI = LagrangeInterpolation(a_function, (0, 10), 20)
+    LI = LagrangeInterpolation(a_function, (0, 50), 10)
     LI.plot()
 
 if __name__ == "__main__":
