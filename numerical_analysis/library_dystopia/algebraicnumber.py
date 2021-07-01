@@ -7,7 +7,7 @@
 class ANSetting():
     def __init__(self):
         # supported: "terminal", "latex"
-        self.string = "latex"
+        self.string = "wolfram"
 
 class AlgebraicNumber():
     def __init__(self, _coeff, _basis, _setting=ANSetting()):
