@@ -60,22 +60,26 @@ class LagrangeInterpolation():
     # plotting
     def plot_data(self):
         plt.plot(*self.data, 'bo')
+        return self
 
     def plot_lagrange_polynomials(self):
         x_axis = np.linspace(*self.area, self.setting.fineness)
         for i in range(self.n):
             y_axis = [self.lagrange_polynomial(i, x) for x in x_axis]
             plt.plot(x_axis, y_axis)
+        return self
 
     def plot_lagrange_interpolation(self):
         x_axis = np.linspace(*self.area, self.setting.fineness)
         y_axis = [self.lagrange_interpolation()(x) for x in x_axis]
         plt.plot(x_axis, y_axis)
+        return self
 
     def plot_function(self):
         x_axis = np.linspace(*self.area, self.setting.fineness)
         y_axis = [self.the_function(x) for x in x_axis]
         plt.plot(x_axis, y_axis)
+        return self
 
     def plot(self):
         if self.setting.show_data:
@@ -87,6 +91,7 @@ class LagrangeInterpolation():
         if self.setting.show_function and callable(self.the_function):
             self.plot_function()
         plt.show()
+        return self
 
 def main():
 
