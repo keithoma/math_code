@@ -6,13 +6,14 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.core.function_base import linspace
 
 class LISetting():
     def __init__(self):
         self.show_data          = True
         self.show_polynomials   = False
         self.show_interpolation = True
-        self.show_function      = True
+        self.show_function      = False
         self.fineness           = 500
 
 class LagrangeInterpolation():
@@ -90,6 +91,12 @@ class LagrangeInterpolation():
             self.plot_lagrange_interpolation()
         if self.setting.show_function and callable(self.the_function):
             self.plot_function()
+
+        # bandade
+        x_axis = np.linspace(*self.area, self.setting.fineness)
+        y_axis = [x ** 8 for x in x_axis]
+        plt.plot(x_axis, y_axis)
+
         plt.show()
         return self
 
@@ -100,10 +107,14 @@ def main():
         [0.5, 2, -1]
     ])
 
-    def a_function(x):
-        return np.sin(x + np.cos(x))
+    def a_function(x): return x ** 8
+    def b_function(x): return np.sin(x + np.cos(x))
 
-    LI = LagrangeInterpolation(a_function, (0, 50), 10)
+    xdata = [-3, -2, -1, 0, 1, 2, 3]
+    ydata = [a_function(x) for x in xdata]
+    data = np.array([xdata, ydata])
+
+    LI = LagrangeInterpolation(data, (-3, 3), 5)
     LI.plot()
 
 if __name__ == "__main__":
