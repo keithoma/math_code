@@ -6,26 +6,33 @@ References:
 https://en.wikipedia.org/wiki/Formal_power_series#Multiplicative_inverse
 """
 
-def multiplicative_inverse(a):
+def multiplicative_inverse(a, n=10):
     """
     Args:
-        a (list)
+        a (list): the coefficients of a polynomial
+        n (int): a natural number, we compute the coefficient of the multiplicative inverse up to n
 
     Returns:
-        (list)
+        (list): the first n coefficients of the inverse
     """
+    # to compute the first n coefficients of the inverse, we need to input the first n coefficients
+    # from a, thus fill in the missing coefficients with 0s
+    while len(a) < n:
+        a.append(0)
+
+    print(a)
+
     b = [1 / a[0]] # b_0 = 1 / a_0
 
     # after b_0, the coefficients are computed recursivly
     # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
-    def next(n): return - (1 / a[0]) * sum([a[i] * b[n - i] for i in range(1, n + 1)])
+    def next_coefficient(n): return - (1 / a[0]) * sum([a[i] * b[n - i] for i in range(1, n + 1)])
 
-    for n in range(1, 11):
-        b.append(next(n))
-        print(b)
+    for k in range(1, n):
+        b.append(next_coefficient(k))
 
     return b
 
 if __name__ == "__main__":
-    print(multiplicative_inverse([1, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+    print(multiplicative_inverse([1, 6, 9]))
 
