@@ -17,10 +17,8 @@ def multiplicative_inverse(a, n=10):
     """
     # to compute the first n coefficients of the inverse, we need to input the first n coefficients
     # from a, thus fill in the missing coefficients with 0s
-    while len(a) < n:
-        a.append(0)
-
-    print(a)
+    if len(a) > n: n = len(a)
+    while len(a) < n: a.append(0)
 
     b = [1 / a[0]] # b_0 = 1 / a_0
 
