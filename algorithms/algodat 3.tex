@@ -1,0 +1,356 @@
+\documentclass[a4paper]{book}
+\title{Commutative Ring Theory}
+\author{Kei Thoma}
+
+
+% ---------------------------------------------------------------------
+% P A C K A G E S
+% ---------------------------------------------------------------------
+
+% typography and formatting
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{exsheets}
+\usepackage{environ}
+\usepackage{graphicx}
+\usepackage{cutwin}
+\usepackage{pifont}
+
+% mathematics
+\usepackage{xfrac} 
+\usepackage{amsthm} % for theorems, and definitions
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{mathtools}
+% \usepackage{MnSymbol} % for \cupdot
+
+% extra
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% ---------------------------------------------------------------------
+% S E T T I N G
+% ---------------------------------------------------------------------
+
+%maybe delete later, for colorbox
+\usepackage{tcolorbox}
+\newtcolorbox{defbox}{colback=blue!5!white,colframe=blue!75!black}
+\newtcolorbox{defboxlight}{colback=cyan!5!white,colframe=cyan!75!black}
+\newtcolorbox{thmbox}{colback=orange!5!white,colframe=orange!75!black}
+\newtcolorbox{rembox}{colback=purple!5!white,colframe=purple!75!black}
+\newtcolorbox{exmbox}{colback=gray!5!white,colframe=gray!75!black}
+\newtcolorbox{intbox}{colback=violet!5!white,colframe=violet!75!black}
+
+% typography and formatting
+\geometry{margin=3cm}
+
+\SetupExSheets{
+  counter-format = ch.qu,
+  counter-within = chapter,
+  question/print = true,
+  solution/print = true,
+}
+
+% mathematics
+\newcounter{global}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[]
+\newtheorem{example}{Example}[definition]
+
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+
+\newtheorem*{remark}{Remark}
+\newtheorem*{intuition}{Intuition}
+
+% extra
+\definecolor{mathif}{HTML}{0000A0} % for conditions
+\definecolor{maththen}{HTML}{CC5500} % for consequences
+\definecolor{mathrem}{HTML}{8b008b} % for notes
+\definecolor{mathobj}{HTML}{008800}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric, arrows}
+
+% ---------------------------------------------------------------------
+% C O M M A N D S
+% ---------------------------------------------------------------------
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\Vol}{\text{Vol}}
+
+\newcommand{\set}[1]{\left\{\, #1 \,\right\}}
+\newcommand{\makeset}[2]{\left\{\, #1 \mid #2 \,\right\}}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff{\mathop{}\!\mathrm{D}}
+
+\newcommand\restr[2]{{% we make the whole thing an ordinary symbol
+  \left.\kern-\nulldelimiterspace % automatically resize the bar with \right
+  #1 % the function
+  \vphantom{\big|} % pretend it's a little taller at normal size
+  \right|_{#2} % this is the delimiter
+  }}
+
+% ---------------------------------------------------------------------
+% R E N D E R
+% ---------------------------------------------------------------------
+
+\newif\ifshowproof
+\showprooftrue
+
+\NewEnviron{Proof}{%
+    \ifshowproof%
+        \begin{proof}%
+            \BODY
+        \end{proof}%
+    \fi%
+}%
+
+\begin{document}
+\section*{1.}
+\textbf{Algorithmus}
+
+\noindent\textbf{Input} ein \texttt{Queue} \(q\) der Länge \(n\) aus Buchstaben
+
+\noindent\textbf{Output} \texttt{boolean}
+
+\noindent\texttt{\(\mathcal{O}(1)\) \indent 1: if n \% 2 == 0 \\
+\(\mathcal{O}(1)\) \indent 2: \indent is\_even = True \\
+\(\mathcal{O}(1)\) \indent 3: \indent m = n / 2 \\
+/ \indent \indent 4: else \\
+\(\mathcal{O}(1)\) \indent 5: \indent is\_even = False \\
+\(\mathcal{O}(1)\) \indent 6: \indent m = (n - 1) / 2 \\
+/ \indent \indent 7: end if \\
+\(\mathcal{O}(1)\) \indent 8: Stack s[m] \# initialisiere ein Stack der Länge m \\
+\(\mathcal{O}(n)\) \indent 9: for i=1 to m do \\
+\(\mathcal{O}(1)\) \indent 10: \indent x = q.head() \\
+\(\mathcal{O}(1)\) \indent 11: \indent s.push(x) \\
+\(\mathcal{O}(1)\) \indent 12: \indent q.dequeue() \\
+/ \indent \indent 13: end for \\
+\(\mathcal{O}(1)\) \indent 14: if not is\_even \\
+\(\mathcal{O}(1)\) \indent 15: \indent q.dequeue() \\
+/ \indent \indent 16: end if \\
+\(\mathcal{O}(n)\) \indent 17: for i=1 to m do \\
+\(\mathcal{O}(1)\) \indent 18: \indent if q.head() != s.top() \\
+\(\mathcal{O}(1)\) \indent 19: \indent \indent return False \\
+/ \indent \indent 20: \indent end if \\
+\(\mathcal{O}(1)\) \indent 21: \indent q.dequeue() \\
+\(\mathcal{O}(1)\) \indent 22: \indent s.pop()\\
+/ \indent \indent 23: end for \\
+\(\mathcal{O}(1)\) \indent 24: return True}
+
+\vspace{1cm}
+
+\noindent\textbf{Begründung:} Vergleiche oben für die Laufzeitanalyse zeilenweise. Aber auf jeden Fall lesen wir die Eingabe nur einmal ab (die erste Hälfte ab Zeile 9, die zweite Hälfte ab Zeile 17), daher ist die Laufzeit \(\mathcal{O}(n)\).
+
+\section*{2.}
+
+\textbf{Algorithmus} Dat Kann Doch Net Wahr Sein
+
+\noindent\textbf{Input} ein \texttt{Queue} \(q\) der Länge \(n\) aus Buchstaben
+
+\noindent\textbf{Output} \texttt{boolean}
+
+\noindent\texttt{1: a = 0 \\
+2: b = 0 \\
+3: c = 0 \\
+4: d = 0 \\
+5: e = 0 \\
+6: f = 0 \\
+7: g = 0 \\
+8: h = 0 \\
+9: i = 0 \\
+10: j = 0 \\
+11: k = 0 \\
+12: l = 0 \\
+13: m = 0 \\
+14: n0 = 0 \\
+15: o = 0 \\
+16: p = 0 \\
+17: q0 = 0 \\
+18: r = 0 \\
+19: s = 0 \\
+20: t = 0 \\
+21: u = 0 \\
+22: v = 0 \\
+23: w = 0 \\
+24: x = 0 \\
+25: y = 0 \\
+26: z = 0 \\
+27: for indx = 1 to n do \\
+28: \indent if q.head() == "a" \\
+29: \indent\indent a += 1 \\
+30: \indent end if \\
+31: \indent if q.head() == "b" \\
+32: \indent\indent b += 1 \\
+33: \indent end if \\
+34: \indent if q.head() == "c" \\
+35: \indent\indent c += 1 \\
+36: \indent end if \\
+37: \indent if q.head() == "d" \\
+38: \indent\indent d += 1 \\
+39: \indent end if \\
+40: \indent if q.head() == "e" \\
+41: \indent\indent e += 1 \\
+42: \indent end if \\
+43: \indent if q.head() == "f" \\
+44: \indent\indent f += 1 \\
+45: \indent end if \\
+46: \indent if q.head() == "g" \\
+47: \indent\indent g += 1 \\
+48: \indent end if \\
+49: \indent if q.head() == "h" \\
+50: \indent\indent h += 1 \\
+51: \indent end if \\
+52: \indent if q.head() == "i" \\
+53: \indent\indent i += 1 \\
+54: \indent end if \\
+55: \indent if q.head() == "j" \\
+56: \indent\indent j += 1 \\
+57: \indent end if \\
+58: \indent if q.head() == "k" \\
+59: \indent\indent k += 1 \\
+60: \indent end if \\
+61: \indent if q.head() == "l" \\
+62: \indent\indent l += 1 \\
+63: \indent end if \\
+64: \indent if q.head() == "m" \\
+65: \indent\indent m += 1 \\
+66: \indent end if \\
+67: \indent if q.head() == "n" \\
+68: \indent\indent n0 += 1 \\
+69: \indent end if \\
+70: \indent if q.head() == "o" \\
+71: \indent\indent o += 1 \\
+72: \indent end if \\
+73: \indent if q.head() == "p" \\
+74: \indent\indent p += 1 \\
+75: \indent end if \\
+76: \indent if q.head() == "q" \\
+77: \indent\indent q0 += 1 \\
+78: \indent end if \\
+79: \indent if q.head() == "r" \\
+80: \indent\indent r += 1 \\
+81: \indent end if \\
+82: \indent if q.head() == "s" \\
+83: \indent\indent s += 1 \\
+84: \indent end if \\
+85: \indent if q.head() == "t" \\
+86: \indent\indent t += 1 \\
+87: \indent end if \\
+88: \indent if q.head() == "u" \\
+89: \indent\indent u += 1 \\
+90: \indent end if \\
+91: \indent if q.head() == "v" \\
+92: \indent\indent v += 1 \\
+93: \indent end if \\
+94: \indent if q.head() == "w" \\
+95: \indent\indent w += 1 \\
+96: \indent end if \\
+97: \indent if q.head() == "x" \\
+98: \indent\indent x += 1 \\
+99: \indent end if \\
+100: \indent if q.head() == "y" \\
+101: \indent\indent y += 1 \\
+102: \indent end if \\
+103: \indent if q.head() == "z" \\
+104: \indent\indent z += 1 \\
+105: \indent end if \\
+106: \indent q.dequeue() \\
+107: end for \\
+108: count = 0 \\
+109: if a \% 2 != 0 \\
+110: \indent count += 1 \\
+111: end if \\
+112: if b \% 2 !=0 \\
+113: \indent count += 1 \\
+114: end if \\
+115: if c \% 2 != 0 \\
+116: \indent count += 1 \\
+117: end if \\
+118: if d \% 2 != 0 \\
+119: \indent count += 1 \\
+120: end if \\
+121: if e \% 2 != 0 \\
+122: \indent count += 1 \\
+123: end if \\
+124: if f \% 2 != 0 \\
+125: \indent count += 1 \\
+126: end if \\
+127: if g \% 2 != 0 \\
+128: \indent count += 1 \\
+129: end if \\
+130: if h \% 2 != 0 \\
+131: \indent count += 1 \\
+132: end if \\
+133: if i \% 2 != 0 \\
+134: \indent count += 1 \\
+135: end if \\
+136: if j \% 2 != 0  \\
+137: \indent count += 1 \\
+138: end if \\
+139: if k \% 2 != 0  \\
+140: \indent count += 1 \\
+141: end if \\
+142: if l \% 2 != 0 \\
+143: \indent count += 1 \\
+144: end if \\
+145: if m \% 2 != 0 \\
+146: \indent count += 1 \\
+147: end if \\
+148: if n0 \% 2 != 0 \\
+149: \indent count += 1 \\
+150: end if \\
+151: if o \% 2 != 0 \\
+152: \indent count += 1 \\
+153: end if \\
+154: if p \% 2 != 0 \\
+155: \indent count += 1 \\
+156: end if \\
+157: if q0 \% 2 != 0 \\
+158: \indent count += 1 \\
+159: end if \\
+160: if r \% 2 != 0 \\
+161: \indent count += 1 \\
+162: end if \\
+163: if s \% 2 != 0 \\
+164: \indent count += 1 \\
+165: end if \\
+166: if t \% 2 != 0 \\
+167: \indent count += 1 \\
+168: end if \\
+169: if u \% 2 != 0 \\
+170: \indent count += 1 \\
+171: end if \\
+172: if v \% 2 != 0 \\
+173: \indent count += 1 \\
+174: end if \\
+175: if w \% 2 != 0 \\
+176: \indent count += 1 \\
+177: end if \\
+178: if x \% 2 != 0 \\
+179: \indent count += 1 \\
+180: end if \\
+181: if y \% 2 != 0 \\
+182: \indent count += 1 \\
+183: end if \\
+184: if z \% 2 != 0 \\
+185: \indent count += 1 \\
+186: end if \\
+187: if count > 1 \\
+188: \indent return false \# with special thanks to my girlfriend \\
+189: else \\
+190: \indent return true \# or the Python script I wrote \\
+191: end if \\
+}
+
+\noindent\textbf{Begründung:} Jede Zeile im obigen Code wird in \(\mathcal{O}(1)\) ausgeführt bis auf die eine for-Schleife, die einmal die Eingabe einließt, was \(\mathcal{O}(n)\) ist. Daher ist die gesamt Laufzeit auch \(\mathcal{O}(n)\).
+
+\end{document}

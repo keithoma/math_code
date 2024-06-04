@@ -1,0 +1,192 @@
+\documentclass[a4paper]{book}
+\title{Commutative Ring Theory}
+\author{Kei Thoma}
+
+
+% ---------------------------------------------------------------------
+% P A C K A G E S
+% ---------------------------------------------------------------------
+
+% typography and formatting
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{exsheets}
+\usepackage{environ}
+\usepackage{graphicx}
+\usepackage{cutwin}
+\usepackage{pifont}
+
+% mathematics
+\usepackage{xfrac}  
+\usepackage{amsthm} % for theorems, and definitions
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{mathtools}
+% \usepackage{MnSymbol} % for \cupdot
+
+% extra
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% ---------------------------------------------------------------------
+% S E T T I N G
+% ---------------------------------------------------------------------
+
+%maybe delete later, for colorbox
+\usepackage{tcolorbox}
+\newtcolorbox{defbox}{colback=blue!5!white,colframe=blue!75!black}
+\newtcolorbox{defboxlight}{colback=cyan!5!white,colframe=cyan!75!black}
+\newtcolorbox{thmbox}{colback=orange!5!white,colframe=orange!75!black}
+\newtcolorbox{rembox}{colback=purple!5!white,colframe=purple!75!black}
+\newtcolorbox{exmbox}{colback=gray!5!white,colframe=gray!75!black}
+\newtcolorbox{intbox}{colback=violet!5!white,colframe=violet!75!black}
+
+% typography and formatting
+\geometry{margin=3cm}
+
+\SetupExSheets{
+  counter-format = ch.qu,
+  counter-within = chapter,
+  question/print = true,
+  solution/print = true,
+}
+
+% mathematics
+\newcounter{global}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[]
+\newtheorem{example}{Example}[definition]
+
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+
+\newtheorem*{remark}{Remark}
+\newtheorem*{intuition}{Intuition}
+
+% extra
+\definecolor{mathif}{HTML}{0000A0} % for conditions
+\definecolor{maththen}{HTML}{CC5500} % for consequences
+\definecolor{mathrem}{HTML}{8b008b} % for notes
+\definecolor{mathobj}{HTML}{008800}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric, arrows}
+
+% ---------------------------------------------------------------------
+% C O M M A N D S
+% ---------------------------------------------------------------------
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\Vol}{\text{Vol}}
+
+\newcommand{\set}[1]{\left\{\, #1 \,\right\}}
+\newcommand{\makeset}[2]{\left\{\, #1 \mid #2 \,\right\}}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff{\mathop{}\!\mathrm{D}}
+
+\newcommand\restr[2]{{% we make the whole thing an ordinary symbol
+  \left.\kern-\nulldelimiterspace % automatically resize the bar with \right
+  #1 % the function
+  \vphantom{\big|} % pretend it's a little taller at normal size
+  \right|_{#2} % this is the delimiter
+  }}
+
+% ---------------------------------------------------------------------
+% R E N D E R
+% ---------------------------------------------------------------------
+
+\newif\ifshowproof
+\showprooftrue
+
+\NewEnviron{Proof}{%
+    \ifshowproof%
+        \begin{proof}%
+            \BODY
+        \end{proof}%
+    \fi%
+}%
+
+\begin{document}
+\section*{1.}
+
+\noindent\textbf{Algorithmus} Auxilary
+
+\noindent\textbf{Input} int i, was entweder 0, 1 oder 2 ist
+
+\noindent\textbf{Output} int, was gleich int i, falls i \(<\) 2, sonst -1 ist
+
+\texttt{1: if i == 0 OR i == 1 \\
+\indent2: \indent return i \\
+\indent3: else \\
+\indent4: \indent return -1 \\
+\indent5: end if}
+
+\vspace{1cm}
+
+\noindent\textbf{Algorithmus} The Part Nobody Cares About
+
+\noindent\textbf{Input} int length, was die Länge des jetztigen Arrays ausdrückt
+
+\noindent\textbf{Output} int n0, int n1, int n2, was die Indezies sind um das Array in 3 zu teilen
+
+\texttt{\noindent1: remainder = length \% 3 \\
+    \indent2: n0 = 1 \\
+    \indent3: n1 = int(((length - Auxilary(remainder)) / 3)) + 1 \\
+    \indent4: n2 = int(2 * int((length - Auxilary(remainder)) / 3)) + 1 \\
+    \indent5: return n0, n1, n2
+}
+
+\vspace{1cm}
+
+\noindent Um die beiden Hilfsfunktionen oben zu erläutern, hier einige Beispiele:
+\begin{align*}
+    [100, 100, 100, 100, 100, 100, 100, 100, 100] &\Rightarrow \texttt{length} = 9; \quad \texttt{remainder} = 0 \\
+    &\Rightarrow \texttt{n0} = 1;\quad \texttt{n1} = 4;\quad \texttt{n2} = 7 \\
+    [100, 100] &\Rightarrow \texttt{length} = 2; \quad \texttt{remainder} = 2 \\
+    &\Rightarrow \texttt{n0} = 1;\quad \texttt{n1} = 2;\quad \texttt{n2} = 3 \\
+    [100, 100, 100, 100, 100] &\Rightarrow \texttt{length} = 5; \qquad \texttt{remainder} = 2\\
+    &\Rightarrow \texttt{n0} = 1;\quad \texttt{n1} = 3;\quad \texttt{n2} = 5 \\
+\end{align*}
+
+\vspace{1cm}
+
+\noindent\textbf{Algorithmus} Elementary \\
+\textbf{Input}
+\begin{itemize}
+    \item Array A der Länge n bevölkert mit 100 bis auf einer Zelle, die ist 101
+    \item index i mit Standardargument 1
+\end{itemize}
+\textbf{Output} int, was als Index die Zelle, in der sich 101 befindet, angibt \\
+\texttt{\indent1: if n <= 1 \\
+\indent2: \indent return i \\
+\indent3: end if \\
+\indent4: n0, n1, n2 = The Part Nobody Cares About(n) \\
+\indent5: if sum(A[:n1]) > sum(A[n1:n2]) \\
+\indent6: \indent return Elementary(A[:n1], i + n0) \\
+\indent7: else if sum(A[:n1]) < sum(A[n1:n2]) \\
+\indent8: \indent return Elementary(A[n1:n2], i + n1) \\
+\indent9: else if sum(A[:n1]) == sum(A[n1:n2]) \\
+\indent10: \indent return Elementary(A[n2:], i + n2) \\
+\indent11: end if}
+
+\vspace{1cm}
+
+\noindent\textbf{Begründung:} Da wir bei jeder Rekursion (also bei jeder Wiegeoperation) das Array A in drei (bis auf Rundungsfehler) gleich lange Teilarrays teilen, können wir dieses Problem als eine ternäre Baumdiagramm auffassen. Die Frage dann ist wie hoch dieses Baumdiagramm ist. Da die Blätter aus einzellige Arrays bestehen, haben wir mit \(h\) als die Höhe des Baumes
+\begin{align*}
+    3^\text{h} > n \iff h > \frac{\log(n)}{\log(3)} \text{.}
+\end{align*}
+Das bedeutet, dass wir höchstens \(\log(n)\) Wiegeoperation benötigen, also kommen wir mit \(\mathcal{O}(\log n)\) Operationen aus.
+
+\section*{2.}
+
+Nummeriere die \(10\) Kisten von \(0\) bis \(9\). Entnehme von jeder Kiste \(x\) Äpfel, wobei \(x\) die Nummer auf der Kiste ist. Also von der \(0.\) Kiste werden \(0\) Äpfel entnommen, von der \(1.\) Kiste \(1\) und so weiter. Insgesammt sind es dann \(0 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 = 45\) Äpfel. Nötige den Spiegel diese \(45\) Äpfel zu wiegen und sei dieser Wert \(y\). Berechne \(y - 4500\). Dieser Wert gibt die Kiste mit den vergifteten Äpfel an, also ist zum Beispiel der Wert \(0\), so befinden sich die vergifteten Äpfel in der \(0.\) Kiste.
+
+Im schlimmsten Fall sind die vergifteten Äpfel in der \(9.\) Kiste aus der \(9\) Äpfel entnommen wurden. Daher, falls die sieben Zwerge aus sieben Zwergen bestehen, sollten die übrigen sieben oder mehr Äpfel ausreichen um diese zu assassinieren.
+\end{document}
