@@ -24,13 +24,8 @@ class PowerSeries():
             self.accuracy = accuracy
 
         # make sure the number of coefficients matches our accuracy
-        if self.accuracy < len(self.coefficients) - 1:
-            raise ValueError("Given accuracy is lower than the number of given coefficients.")
-        else:
-            self.coefficients = (
-                self.coefficients
-                 + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
-            )
+        self.increase_accuracy(accuracy)
+            
 
 
 
@@ -46,6 +41,24 @@ class PowerSeries():
             output_string += str(rational) + ", "
         output_string = output_string[:-2] + ")"
         return output_string
+
+
+
+    def increase_accuracy(self, accuracy):
+        if self.accuracy > accuracy:
+            raise ValueError("You don't want to decrease accuracy, do you?")
+        elif self.accuracy == accuracy:
+            pass
+        else:
+            self.coefficients = (
+                self.coefficients
+                 + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
+            )
+        return self
+
+
+    def cauchy_product(self, right):
+        pass
 
 
 
