@@ -5,16 +5,23 @@ import integer
 
 class Rational():
 
-    def __init__(self, numerator, denominator):
+    def __init__(self, numerator, denominator=1):
         """
         """
-        if denominator == 0: raise ZeroDivisionError("Denominator cannot be zero!")
-        try:
-            self.sign        = -1 if numerator * denominator < 0 else 1
-            self.numerator   = int(abs(numerator))
-            self.denominator = int(abs(denominator))
-        except TypeError:
-            print("Type error. Construction of Rational object failed.")
+        # check if the arguments are integers
+        # I don't want to do it the Pythonian way, I need to make sure that we are working with
+        # integers
+        if not isinstance(numerator, int): raise TypeError("Numerator must be an integer.")
+        if not isinstance(denominator, int): raise TypeError("Denominator must be an integer.")
+
+        if denominator == 0: raise ZeroDivisionError("Denominator cannot be zero.")
+
+        # save the attributes
+        self.sign        = -1 if numerator * denominator < 0 else 1
+        self.numerator   = int(abs(numerator))
+        self.denominator = int(abs(denominator))
+
+        # reduce the fraction
         self.reduce()
     
     def reduce(self):
@@ -24,7 +31,11 @@ class Rational():
         return self
 
     def __str__(self):
-        return "{}{} / {}".format("-" if self.sign < 0 else "", self.numerator, self.denominator)
+        return "{}{}{}".format(
+            "-" if self.sign < 0 else "",
+            self.numerator,
+            " / " + str(self.denominator) if self.denominator != 1 else ""
+        )
 
     def __add__(self, right):
         return Rational(
@@ -40,9 +51,9 @@ class Rational():
         )
 
 if __name__ == "__main__":
-    frac1 = Rational(0, 3)
-    frac2 = Rational(1, "a")
+    frac1 = Rational(1, 3)
+    frac2 = Rational(1, 1)
     print(frac1)
-    print(frac2)
+    print("{}.....".format(frac2))
     print("\n\n")
     print(frac1 + frac2)
