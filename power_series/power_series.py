@@ -8,6 +8,14 @@ class PowerSeries():
         Args:
             list_coefficients (list of int): the list may only contain ints, any other type will
                 raise an error in the Rational class
+            
+            accuracy (int): the number of the first coefficients we want to look at, the 0-th
+                coefficient is the constant coefficient, the first is the coefficient of X^1 and so
+                on
+
+                Negative values will be overwritten by the number of coefficients given. Thus, if
+                no argument is given for accuracy, we will take the number of coefficients given as
+                accuracy.
         
         """
         self.coefficients = PowerSeries.to_rational(list_coefficients)
@@ -54,7 +62,7 @@ class PowerSeries():
                 self.coefficients
                  + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
             )
-        return self
+        return self.accuracy
 
 
     def cauchy_product(self, right):
