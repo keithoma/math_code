@@ -53,6 +53,11 @@ class PowerSeries():
 
 
     def __str__(self):
+        """ Converts the list of coefficients as a readable string. Current format is
+            (0, 1, 2).
+        
+        
+        """
         output_string = "("
         for rational in self.coefficients:
             output_string += str(rational) + ", "
@@ -75,7 +80,15 @@ class PowerSeries():
 
 
     def cauchy_product(self, right):
-        pass
+        if len(a) > n: n = len(a)
+        if len(b) > n: n = len(b)
+
+        while len(a) < n: a.append(0)
+        while len(b) < n: b.append(0)
+
+        def c(k): return sum([a[l] * b[k - l] for l in range(k + 1)])
+
+        return [c(k) for k in range(n)]
 
 
 
