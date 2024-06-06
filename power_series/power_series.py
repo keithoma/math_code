@@ -39,6 +39,15 @@ class PowerSeries():
 
     @staticmethod
     def to_rational(list_coefficients):
+        """
+        
+        Args:
+            list_coefficients (list of int):
+        
+        Returns:
+            (list of Rational):
+        
+        """
         return [rational.Rational(coefficient) for coefficient in list_coefficients]
 
 
