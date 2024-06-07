@@ -80,7 +80,7 @@ class PowerSeries():
 
 
     def cauchy_product(self, right):
-        self.accuracy = max(self.accuracy, right.accuracy)
+        self.accuracy = right.accuracy = max(self.accuracy, right.accuracy)
 
         if len(b) > n: n = len(b)
 
