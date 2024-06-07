@@ -44,6 +44,13 @@ class Rational():
             self.denominator * right.denominator
         )
     
+    def __radd__(self, right):
+        return Rational(
+            self.sign * self.numerator * right.denominator
+            + right.sign * right.numerator * self.denominator,
+            self.denominator * right.denominator
+        )
+    
     def __mul__(self, right):
         return Rational(
             self.sign * self.numerator * right.sign * right.numerator,

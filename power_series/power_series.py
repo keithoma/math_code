@@ -1,3 +1,8 @@
+""" Note to my future self: PowerSeries.cauchy_product is not working ... it must be because
+I'm trying to use sum() on rational object ...
+"""
+
+
 import rational
 
 class PowerSeries():
@@ -32,7 +37,7 @@ class PowerSeries():
             self.accuracy = accuracy
 
         # make sure the number of coefficients matches our accuracy
-        self.increase_accuracy(accuracy)
+        self.match_accuracy_to(self.accuracy)
             
 
 
@@ -64,36 +69,38 @@ class PowerSeries():
         output_string = output_string[:-2] + ")"
         return output_string
 
-
-
-    def increase_accuracy(self, accuracy):
-        if self.accuracy > accuracy:
-            raise ValueError("You don't want to decrease accuracy, do you?")
-        elif self.accuracy == accuracy:
-            pass
-        else:
-            self.coefficients = (
-                self.coefficients
-                 + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
-            )
-        return self.accuracy
+    def match_accuracy_to(self, accuracy=None):
+        """
+        """
+        # if a value was given for accuracy, update the attribute
+        if accuracy is not None:
+            self.accuracy = accuracy
+        
+        # append 0s as Rational objects at the end of the coefficients
+        self.coefficients = (
+            self.coefficients
+            + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
+        )
+        return self
 
 
     def cauchy_product(self, right):
         self.accuracy = right.accuracy = max(self.accuracy, right.accuracy)
+        self.match_accuracy_to()
 
-        if len(b) > n: n = len(b)
+        def c(k): return sum([self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)])
 
-        while len(a) < n: a.append(0)
-        while len(b) < n: b.append(0)
-
-        def c(k): return sum([a[l] * b[k - l] for l in range(k + 1)])
-
-        return [c(k) for k in range(n)]
+        return PowerSeries([c(k) for k in range(self.accuracy)])
 
 
 
 if __name__ == "__main__":
-    power1 = PowerSeries([1, 2, 3], 1)
-    print(power1)
-    print(power1.accuracy)
+    power1 = PowerSeries([1, 2, 3])
+    power2 = PowerSeries([1, 0, -1, 2])
+    # print(power1.accuracy)
+    # print("------------")
+    # print(power1)
+    # print(power2)
+    cauchy = power1.cauchy_product(power2)
+    print(cauchy)
+    # print(cauchy.accuracy)
