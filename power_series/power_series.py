@@ -45,9 +45,6 @@ class PowerSeries():
 
         # make sure the number of coefficients matches our accuracy
         self.match_accuracy_to(self.accuracy)
-            
-
-
 
     @staticmethod
     def to_rational(list_coefficients):
@@ -61,8 +58,6 @@ class PowerSeries():
         
         """
         return [Rational(coefficient) for coefficient in list_coefficients]
-
-
 
     def __str__(self):
         """ Converts the list of coefficients as a readable string. Current format is
@@ -90,7 +85,6 @@ class PowerSeries():
         )
         return self
 
-
     def cauchy_product(self, right):
         self.accuracy = right.accuracy = self.accuracy + right.accuracy
         self.match_accuracy_to()
@@ -102,8 +96,6 @@ class PowerSeries():
             )
 
         return PowerSeries([c(k) for k in range(self.accuracy + 1)])
-
-
 
 if __name__ == "__main__":
     power1 = PowerSeries([1, 2, 3])
