@@ -1,5 +1,5 @@
 """ Agenda:
-* get pen and paper and figure out how cauchy product even works ...
+* implement the multiplicative inverse
 
 Implements the PowerSeries class that represents a power series. A mathematical power series has
 infinitely many coefficients, i.e. all polynomials may be viewed as a power series with almost all
