@@ -5,8 +5,8 @@ Implements the PowerSeries class that represents a power series. A mathematical 
 infinitely many coefficients, i.e. all polynomials may be viewed as a power series with almost all
 coefficients being zero, but obviously we cannot save infinitely many coefficients. Thus, the
 PowerSeries class defines an attribute called 'accuracy' that sets how many of the first
-coefficients we care about. The coefficients themselves are saved as a list of Rational objects
-(see rational.py) in the attribute 'coefficients'.
+coefficients we will care about. The coefficients themselves are saved as a list of Rational
+objects (see rational.py) in the attribute 'coefficients'.
 """
 
 
