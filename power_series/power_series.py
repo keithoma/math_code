@@ -10,7 +10,7 @@ objects (see rational.py) in the attribute 'coefficients'.
 """
 
 
-import rational
+from rational import Rational
 
 class PowerSeries():
 
@@ -60,7 +60,7 @@ class PowerSeries():
             (list of Rational):
         
         """
-        return [rational.Rational(coefficient) for coefficient in list_coefficients]
+        return [Rational(coefficient) for coefficient in list_coefficients]
 
 
 
@@ -86,7 +86,7 @@ class PowerSeries():
         # append 0s as Rational objects at the end of the coefficients
         self.coefficients = (
             self.coefficients
-            + [rational.Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
+            + [Rational(0)] * (self.accuracy + 1 - len(self.coefficients))
         )
         return self
 
@@ -95,7 +95,7 @@ class PowerSeries():
         self.accuracy = right.accuracy = max(self.accuracy, right.accuracy)
         self.match_accuracy_to()
 
-        def c(k): return rational.Rational.rational_sum([self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)])
+        def c(k): return Rational.rational_sum([self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)])
 
         return PowerSeries([c(k) for k in range(self.accuracy)])
 
