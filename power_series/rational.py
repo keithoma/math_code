@@ -58,9 +58,8 @@ class Rational():
         )
 
 if __name__ == "__main__":
-    frac1 = Rational(1, 3)
-    frac2 = Rational(1, 1)
-    print(frac1)
-    print("{}.....".format(frac2))
-    print("\n\n")
-    print(frac1 + frac2)
+    frac1 = Rational(1, 2)
+    frac2 = Rational(1, 3)
+    frac3 = Rational(1, 4)
+    print(frac1 + frac2 + frac3)
+    print(sum([frac1, frac2, frac3])) # I have to solve this issue!
