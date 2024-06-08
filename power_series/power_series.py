@@ -1,5 +1,12 @@
 """ Note to my future self: PowerSeries.cauchy_product is not working ... it must be because
 I'm trying to use sum() on rational object ...
+
+Implements the PowerSeries class that represents a power series. A mathematical power series has
+infinitely many coefficients, i.e. all polynomials may be viewed as a power series with almost all
+coefficients being zero, but obviously we cannot save infinitely many coefficients. Thus, the
+PowerSeries class defines an attribute called 'accuracy' that sets how many of the first
+coefficients we care about. The coefficients themselves are saved as a list of Rational objects
+(see rational.py) in the attribute 'coefficients'.
 """
 
 
