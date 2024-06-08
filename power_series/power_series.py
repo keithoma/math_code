@@ -95,7 +95,7 @@ class PowerSeries():
         self.accuracy = right.accuracy = max(self.accuracy, right.accuracy)
         self.match_accuracy_to()
 
-        def c(k): return sum([self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)])
+        def c(k): return rational.Rational.rational_sum([self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)])
 
         return PowerSeries([c(k) for k in range(self.accuracy)])
 

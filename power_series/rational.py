@@ -51,6 +51,12 @@ class Rational():
             self.denominator * right.denominator
         )
     
+    @classmethod
+    def rational_sum(cls, list_of_rationals):
+        # apparantly, I have to pass a neutral element for the sum to work with magic methods
+        # also note that the sum() function uses __radd__
+        return sum(list_of_rationals, Rational(0))
+
     def __mul__(self, right):
         return Rational(
             self.sign * self.numerator * right.sign * right.numerator,
@@ -62,4 +68,4 @@ if __name__ == "__main__":
     frac2 = Rational(1, 3)
     frac3 = Rational(1, 4)
     print(frac1 + frac2 + frac3)
-    print(sum([frac1, frac2, frac3])) # I have to solve this issue!
+    print(Rational.rational_sum([frac1, frac2, frac3])) # I have to solve this issue!
