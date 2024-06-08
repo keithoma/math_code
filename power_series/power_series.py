@@ -92,13 +92,9 @@ class PowerSeries():
 
 
     def cauchy_product(self, right):
-        self.accuracy = right.accuracy = max(self.accuracy, right.accuracy)
+        self.accuracy = right.accuracy = self.accuracy + right.accuracy
         self.match_accuracy_to()
-
-        print("-----------")
-        print(self.accuracy)
-        print(right.accuracy)
-        print("-----------")
+        right.match_accuracy_to()
 
         def c(k):
             return Rational.rational_sum(
