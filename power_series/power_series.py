@@ -86,6 +86,8 @@ class PowerSeries():
         return self
 
     def cauchy_product(self, right):
+
+        # we need to set the accuracy to the degree of the product which is the sum of both degrees
         self.accuracy = right.accuracy = self.accuracy + right.accuracy
         self.match_accuracy_to()
         right.match_accuracy_to()
