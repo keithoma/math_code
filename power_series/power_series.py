@@ -99,6 +99,15 @@ class PowerSeries():
 
         return PowerSeries([c(k) for k in range(self.accuracy + 1)])
 
+
+    def __add__(self, other):
+        self.accuracy = other.accuracy = max(self.accuracy, other.accuracy)
+        self.match_accuracy_to()
+        other.match_accuracy_to()
+
+        return PowerSeries([left + right for left, right in zip(self.coefficients, other.coefficients)])
+
+
 if __name__ == "__main__":
     power1 = PowerSeries([1, 2, 3])
     power2 = PowerSeries([1, 0, -1, 2])
@@ -106,6 +115,8 @@ if __name__ == "__main__":
     # print("------------")
     # print(power1)
     # print(power2)
-    cauchy = power1.cauchy_product(power2)
-    print(cauchy)
+    # cauchy = power1.cauchy_product(power2)
+    # print(cauchy)
+    sumi = power1 + power2
+    print(sumi)
     # print(cauchy.accuracy)
