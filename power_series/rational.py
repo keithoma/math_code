@@ -13,11 +13,17 @@ class Rational():
 
         # if the given number is already a rational number and the denominator is 1, we can just
         # save the values of the given rational number as attributes
-        if isinstance(number, Rational):
+        if isinstance(number, Rational) and denominator == 1:
             self.sign        = number.sign
             self.numerator   = number.numerator
             self.denominator = number.denominator
             return
+        elif isinstance(number, Rational) and isinstance(denominator, Rational):
+            self.sign        = number.sign * denominator.sign
+            self.numerator   = number.numerator * denominator.denominator
+            self.denominator = number.denominator * denominator.numerator
+            return
+
 
         # check if the arguments are integers
         # I don't want to do it the Pythonian way, I need to make sure that we are working with
@@ -33,12 +39,21 @@ class Rational():
 
         # reduce the fraction
         self.reduce()
-    
+
+    @classmethod
+    def rational_sum(cls, list_of_rationals):
+        # apparantly, I have to pass a neutral element for the sum to work with magic methods
+        # also note that the sum() function uses __radd__
+        return sum(list_of_rationals, Rational(0))
+
     def reduce(self):
         d = integer.gcd(self.numerator, self.denominator)
         self.numerator   = self.numerator // d
         self.denominator = self.denominator // d
         return self
+
+    def reciprocal(self):
+        return Rational(self.sign * self.denominator, self.numerator)
 
     def __str__(self):
         return "{}{}{}".format(
@@ -60,12 +75,6 @@ class Rational():
         """ Reverse addition for two Rational object. Equivalent to __add__.
         """
         return self.__add__(other)
-    
-    @classmethod
-    def rational_sum(cls, list_of_rationals):
-        # apparantly, I have to pass a neutral element for the sum to work with magic methods
-        # also note that the sum() function uses __radd__
-        return sum(list_of_rationals, Rational(0))
 
     def __mul__(self, other):
         return Rational(

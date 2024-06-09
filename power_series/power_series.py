@@ -59,18 +59,6 @@ class PowerSeries():
         """
         return [Rational(coefficient) for coefficient in list_coefficients]
 
-    def __str__(self):
-        """ Converts the list of coefficients as a readable string. Current format is
-            (0, 1, 2).
-        
-        
-        """
-        output_string = "("
-        for rational in self.coefficients:
-            output_string += str(rational) + ", "
-        output_string = output_string[:-2] + ")"
-        return output_string
-
     def match_accuracy_to(self, accuracy=None):
         """
         """
@@ -99,6 +87,15 @@ class PowerSeries():
 
         return PowerSeries([c(k) for k in range(self.accuracy + 1)])
 
+    def __str__(self):
+        """ Converts the list of coefficients as a readable string. Current format is
+            (0, 1, 2).
+        """
+        output_string = "("
+        for rational in self.coefficients:
+            output_string += str(rational) + ", "
+        output_string = output_string[:-2] + ")"
+        return output_string
 
     def __add__(self, other):
         self.accuracy = other.accuracy = max(self.accuracy, other.accuracy)
