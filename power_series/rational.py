@@ -17,22 +17,18 @@ class Rational():
             self.sign        = -1 if number * denominator < 0 else 1
             self.numerator   = abs(number)
             self.denominator = abs(denominator)
-            return
         elif isinstance(number, Rational) and isinstance(denominator, int):
             self.sign        = -1 if number.sign * denominator < 0 else 1
             self.numerator   = number.numerator
             self.denominator = number.denominator * abs(denominator)
-            return
         elif isinstance(number, int) and isinstance(denominator, Rational):
             self.sign        = -1 if number * denominator.sign < 0 else 1
             self.numerator   = number * denominator.denominator
             self.denominator = denominator.numerator
-            return
         elif isinstance(number, Rational) and isinstance(denominator, Rational):
             self.sign        = -1 if number.sign * denominator.sign < 0 else 1
             self.numerator   = number.numerator * denominator.denominator
             self.denominator = number.denominator * denominator.numerator
-            return
 
         # reduce the fraction
         self.reduce()
@@ -45,8 +41,12 @@ class Rational():
 
     def reduce(self):
         d = integer.gcd(self.numerator, self.denominator)
-        self.numerator   = self.numerator // d
-        self.denominator = self.denominator // d
+        self.numerator   = int(self.numerator / d)
+        self.denominator = int(self.denominator / d)
+
+        if self.numerator == 0:
+            self.denominator = 1
+
         return self
 
     def reciprocal(self):
@@ -58,6 +58,9 @@ class Rational():
             self.numerator,
             " / " + str(self.denominator) if self.denominator != 1 else ""
         )
+
+    def __neg__(self):
+        return Rational(- self.sign * self.numerator, self.denominator)
 
     def __add__(self, other):
         """ Addition for two Rational object.
@@ -93,4 +96,5 @@ if __name__ == "__main__":
     # print(Rational.rational_sum([frac1, frac2, frac3]))
 
     # print(Rational(frac1))
-    print(frac1 / frac2)
+    frac4 = Rational(0, 4)
+    print(frac4)

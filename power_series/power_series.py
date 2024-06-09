@@ -74,15 +74,15 @@ class PowerSeries():
         return self
 
     def multiplicative_inverse(self):
-        b = [1 / self.coefficients[0]] # b_0 = 1 / a_0
+        b = [Rational(1) / self.coefficients[0]] # b_0 = 1 / a_0
 
         # after b_0, the coefficients are computed recursivly
         # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
-        def next_coefficient(n): return - (1 / self.coefficients[0]) * sum([self.coefficients[i] * b[n - i] for i in range(1, n + 1)])
+        def next_coefficient(n): return - (Rational(1) / self.coefficients[0]) * Rational.rational_sum([self.coefficients[i] * b[n - i] for i in range(1, n + 1)])
         for k in range(1, self.accuracy):
             b.append(next_coefficient(k))
 
-        return b
+        return PowerSeries(b)
 
 
     def cauchy_product(self, right):
@@ -123,7 +123,7 @@ class PowerSeries():
 
 
 if __name__ == "__main__":
-    power1 = PowerSeries([1, 2, 3])
+    power1 = PowerSeries([1, 1, 1], 20)
     power2 = PowerSeries([1, 0, -1, 2])
     # print(power1.accuracy)
     # print("------------")
@@ -132,5 +132,9 @@ if __name__ == "__main__":
     # cauchy = power1.cauchy_product(power2)
     # print(cauchy)
     mul_inverse = power1.multiplicative_inverse()
+    print(power1)
+    print("\n\n\n")
     print(mul_inverse)
+    print("\n\n\n")
+    print(power1.cauchy_product(mul_inverse))
     # print(cauchy.accuracy)
