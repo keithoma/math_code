@@ -13,29 +13,26 @@ class Rational():
 
         # if the given number is already a rational number and the denominator is 1, we can just
         # save the values of the given rational number as attributes
-        if isinstance(number, Rational) and denominator == 1:
-            self.sign        = number.sign
+        if isinstance(number, int) and isinstance(denominator, int):
+            self.sign        = -1 if number * denominator < 0 else 1
+            self.numerator   = abs(number)
+            self.denominator = abs(denominator)
+            return
+        elif isinstance(number, Rational) and isinstance(denominator, int):
+            self.sign        = -1 if number.sign * denominator < 0 else 1
             self.numerator   = number.numerator
-            self.denominator = number.denominator
+            self.denominator = number.denominator * abs(denominator)
+            return
+        elif isinstance(number, int) and isinstance(denominator, Rational):
+            self.sign        = -1 if number * denominator.sign < 0 else 1
+            self.numerator   = number * denominator.denominator
+            self.denominator = denominator.numerator
             return
         elif isinstance(number, Rational) and isinstance(denominator, Rational):
-            self.sign        = number.sign * denominator.sign
+            self.sign        = -1 if number.sign * denominator.sign < 0 else 1
             self.numerator   = number.numerator * denominator.denominator
             self.denominator = number.denominator * denominator.numerator
             return
-
-
-        # check if the arguments are integers
-        # I don't want to do it the Pythonian way, I need to make sure that we are working with
-        # integers
-        if not isinstance(number, int): raise TypeError("Numerator must be an integer.")
-        if not isinstance(denominator, int): raise TypeError("Denominator must be an integer.")
-
-
-        # save the attributes
-        self.sign        = -1 if number * denominator < 0 else 1
-        self.numerator   = int(abs(number))
-        self.denominator = int(abs(denominator))
 
         # reduce the fraction
         self.reduce()
