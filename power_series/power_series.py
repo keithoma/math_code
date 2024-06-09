@@ -1,5 +1,10 @@
 """ Agenda:
-* implement the multiplicative inverse
+* clean up
+
+Notes:
+* I might need to define two different kind of 'accuracies' ... when I multiply two polynomials,
+I need self.acc + other.acc much accuracy, but the values themselves are only accurate up to
+min(self.acc, other.acc)
 
 Implements the PowerSeries class that represents a power series. A mathematical power series has
 infinitely many coefficients, i.e. all polynomials may be viewed as a power series with almost all
