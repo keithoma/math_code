@@ -105,7 +105,9 @@ class PowerSeries():
         self.match_accuracy_to()
         other.match_accuracy_to()
 
-        return PowerSeries([left + right for left, right in zip(self.coefficients, other.coefficients)])
+        return PowerSeries(
+            [left + right for left, right in zip(self.coefficients, other.coefficients)]
+        )
 
 
 if __name__ == "__main__":
