@@ -54,12 +54,8 @@ class Rational():
             self.denominator * right.denominator
         )
     
-    def __radd__(self, right):
-        return Rational(
-            self.sign * self.numerator * right.denominator
-            + right.sign * right.numerator * self.denominator,
-            self.denominator * right.denominator
-        )
+    def __radd__(self, other):
+        return self.__add__(other)
     
     @classmethod
     def rational_sum(cls, list_of_rationals):
