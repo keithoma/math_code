@@ -47,14 +47,18 @@ class Rational():
             " / " + str(self.denominator) if self.denominator != 1 else ""
         )
 
-    def __add__(self, right):
+    def __add__(self, other):
+        """ Addition for two Rational object.
+        """
         return Rational(
-            self.sign * self.numerator * right.denominator
-            + right.sign * right.numerator * self.denominator,
-            self.denominator * right.denominator
+            self.sign * self.numerator * other.denominator
+            + other.sign * other.numerator * self.denominator,
+            self.denominator * other.denominator
         )
     
     def __radd__(self, other):
+        """ Reverse addition for two Rational object. Equivalent to __add__.
+        """
         return self.__add__(other)
     
     @classmethod
@@ -63,10 +67,10 @@ class Rational():
         # also note that the sum() function uses __radd__
         return sum(list_of_rationals, Rational(0))
 
-    def __mul__(self, right):
+    def __mul__(self, other):
         return Rational(
-            self.sign * self.numerator * right.sign * right.numerator,
-            self.denominator * right.denominator
+            self.sign * self.numerator * other.sign * other.numerator,
+            self.denominator * other.denominator
         )
 
     def __rmul__(self, other):
