@@ -108,6 +108,9 @@ class PowerSeries():
         return PowerSeries(
             [left + right for left, right in zip(self.coefficients, other.coefficients)]
         )
+    
+    def __radd__(self, other):
+        return self.__add__(other)
 
 
 if __name__ == "__main__":
