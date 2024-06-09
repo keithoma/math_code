@@ -69,17 +69,14 @@ class Rational():
             self.denominator * right.denominator
         )
 
-    def __rmul__(self, right):
-        return Rational(
-            self.sign * self.numerator * right.sign * right.numerator,
-            self.denominator * right.denominator
-        )
+    def __rmul__(self, other):
+        return self.__rmul__(other)
 
 if __name__ == "__main__":
     frac1 = Rational(1, 2)
     frac2 = Rational(1, 3)
     frac3 = Rational(1, 4)
-    # print(frac1 + frac2 + frac3)
-    # print(Rational.rational_sum([frac1, frac2, frac3]))
+    print(frac1 + frac2 + frac3)
+    print(Rational.rational_sum([frac1, frac2, frac3]))
 
     print(Rational(frac1))
