@@ -4,8 +4,6 @@
 # set pylint to allow variable names under three letters
 # pylint: disable=C0103
 
-# from typing import Union, List
-
 import numpy as np # just for testing purposes
 
 def _int_gcd(a: int, b: int) -> int:
@@ -18,51 +16,74 @@ def _list_gcd(a: list[int]) -> int:
     """Compute the GCD of a list of integers."""
     if len(a) == 0:
         raise ValueError("The list must contain at least one integer.")
-    
+
     result = abs(a[0])
     for number in a[1:]:
         result = _int_gcd(result, abs(number))
-    
+
     return result
 
 def gcd(a: int | list[int], b: int | list[int] | None = None) -> int:
     """Returns the greatest common divisor of integers or lists of integers.
     """
-    
+    # this function is supposed to be used with ints in both arguments or a list in the first
+    # argument
+    if isinstance(a, int) and isinstance(b, int):
+        return _int_gcd(a, b)
+
+    if isinstance(a, list) and b is None:
+        return _list_gcd(a)
+
+    # the other combinations are also supported, but will give a warning
     if isinstance(a, int):
+        if isinstance(b, list):
+            return _list_gcd([a] + b)
         if b is None:
             return abs(a)
-        if isinstance(b, int):
-            return _int_gcd(abs(a), abs(b))
-        if isinstance(b, list):
-            abs_b = [abs(x) for x in b]
-            return _list_gcd([abs(a)] + abs_b)
         raise TypeError("Invalid type for second argument. Expected int or list of int.")
-    
+
     if isinstance(a, list):
-        abs_a = [abs(x) for x in a]
-        if b is None:
-            return _list_gcd(abs_a)
         if isinstance(b, int):
-            return _list_gcd(abs_a + [abs(b)])
+                return _list_gcd(a + [b])
         if isinstance(b, list):
-            abs_b = [abs(x) for x in b]
-            return _list_gcd(abs_a + abs_b)
+            return _list_gcd(a + b)
         raise TypeError("Invalid type for second argument. Expected int or list of int.")
-    
+
     raise TypeError("Invalid type for first argument. Expected int or list of int.")
 
 def _int_lcm(a: int | list[int], b: None | int=None) -> int:
     """ Returns the least common multiple of two integers.
     """
-    a, b = abs(a), abs(b)
-    return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
+    if a == 0 or b == 0:
+        return 0
+    return abs(a * b) // _int_gcd(a, b)
 
-def lcm(a: int | list[int], b: None | int=None) -> int:
+def _list_lcm(a: list[int]) -> int: 
+    if not a:
+        return 0
+    lcm_value = a[0]
+    for num in a[1:]:
+        lcm_value = _int_lcm(lcm_value, num)
+    return lcm_value
+
+def lcm(a: int | list[int], b: int | list[int] | None=None) -> int:
     """ Returns the least common multiple of two integers.
     """
-    a, b = abs(a), abs(b)
-    return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
+    if isinstance(a, int):
+        if isinstance(b, int):
+            _int_lcm(a, b)
+        elif isinstance(b, list[int]):
+            pass
+
+        elif b is None:
+            raise ValueError("Second argument is required when the first argument is an integer.")
+        return _int_lcm(a, b)
+    elif isinstance(a, list):
+        if b is not None:
+            raise ValueError("Second argument should be None when the first argument is a list.")
+        return _list_lcm(a)
+    else:
+        raise TypeError("First argument must be either an integer or a list of integers.")
 
 def _nth_test(n: int, a: int, b: int) -> int:
     """ Executes a single test of gcd() and lcm(). For internal use only.
@@ -93,11 +114,8 @@ def _nth_test(n: int, a: int, b: int) -> int:
               computed_gcd=computed_gcd, computed_int_gcd=computed_int_gcd, true_gcd=true_gcd,
               computed_lcm=computed_lcm, computed_int_lcm=computed_int_lcm, true_lcm=true_lcm))
 
-    if computed_gcd != true_gcd:
+    if computed_gcd != true_gcd or computed_lcm != true_lcm:
         raise Exception("Something went wrong. Computed gcd doesn't match actual gcd.")
-
-    if computed_lcm != true_lcm:
-        raise Exception("Something went wrong. Computed lcm doesn't match actual lcm.")
 
     return n + 1
 
