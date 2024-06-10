@@ -4,17 +4,20 @@
 import numpy as np # just for testing purposes
 
 def gcd(a, b):
+    """ Returns the greatest common divisor of two integers.
+    """
     a, b = abs(a), abs(b)
     return gcd(b, a % b) if b else a
 
 def lcm(a, b):
+    """ Returns the least common multiple of two integers.
+    """
     a, b = abs(a), abs(b)
     return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
 
 if __name__ == "__main__":
 
     def nth_random_test(n, a, b):
-        
         computed_gcd = gcd(a, b)
         true_gcd = np.gcd(a, b)
         
