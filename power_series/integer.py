@@ -8,59 +8,62 @@
 
 import numpy as np # just for testing purposes
 
-def log_decorator(func):
-    def wrapper(*args, **kwargs):
-        print(f"Function {func.__name__} called with arguments {args} and {kwargs}")
-        result = func(*args, **kwargs)
-        print(f"Function {func.__name__} returned {result}")
-        return result
-    return wrapper
-
-def int_gcd(a: int, b: int) -> int:
+def _int_gcd(a: int, b: int) -> int:
+    """Compute the GCD of two integers using the Euclidean algorithm."""
     while b:
         a, b = b, a % b
-    return a
+    return abs(a)  # Ensure the GCD is non-negative
 
-def list_gcd(a: list[int]) -> int:
-    # Initialize the GCD with the first element 
-    result = a[0]
-
-    # Compute the GCD iteratively for each element in the list
+def _list_gcd(a: list[int]) -> int:
+    """Compute the GCD of a list of integers."""
+    if len(a) == 0:
+        raise ValueError("The list must contain at least one integer.")
+    
+    result = abs(a[0])
     for number in a[1:]:
-        result = int_gcd(result, number)
-
+        result = _int_gcd(result, abs(number))
+    
     return result
 
-@log_decorator
-def gcd(a: int | list[int], b: int | list[int] | None=None) -> int:
-    """ Returns the greatest common divisor of two integers.
+def gcd(a: int | list[int], b: int | list[int] | None = None) -> int:
+    """Returns the greatest common divisor of integers or lists of integers.
     """
-    if isinstance(a, int) and isinstance(b, int):
-        int_gcd(a, b)
-    elif isinstance(a, int) and isinstance(b, list[int]):
+    
+    if isinstance(a, int):
+        if b is None:
+            return abs(a)
+        if isinstance(b, int):
+            return _int_gcd(abs(a), abs(b))
+        if isinstance(b, list):
+            abs_b = [abs(x) for x in b]
+            return _list_gcd([abs(a)] + abs_b)
+        raise TypeError("Invalid type for second argument. Expected int or list of int.")
+    
+    if isinstance(a, list):
+        abs_a = [abs(x) for x in a]
+        if b is None:
+            return _list_gcd(abs_a)
+        if isinstance(b, int):
+            return _list_gcd(abs_a + [abs(b)])
+        if isinstance(b, list):
+            abs_b = [abs(x) for x in b]
+            return _list_gcd(abs_a + abs_b)
+        raise TypeError("Invalid type for second argument. Expected int or list of int.")
+    
+    raise TypeError("Invalid type for first argument. Expected int or list of int.")
 
-    elif isinstance(a, int) and isinstance(b, None):
-        return a
-    elif isinstance(a, list) and isinstance(b, int):
-        pass
-    elif isinstance(a, list) and isinstance(b, list):
-        pass
-    elif isinstance(a, list) and isinstance(b, None):
-        pass
-    else:
-        raise TypeError
-
+def _int_lcm(a: int | list[int], b: None | int=None) -> int:
+    """ Returns the least common multiple of two integers.
+    """
     a, b = abs(a), abs(b)
-    return gcd(b, a % b) if b else a
+    return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
 
-@log_decorator
 def lcm(a: int | list[int], b: None | int=None) -> int:
     """ Returns the least common multiple of two integers.
     """
     a, b = abs(a), abs(b)
     return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
 
-@log_decorator
 def _nth_test(n: int, a: int, b: int) -> int:
     """ Executes a single test of gcd() and lcm(). For internal use only.
 
@@ -73,18 +76,22 @@ def _nth_test(n: int, a: int, b: int) -> int:
         (int): n from the argument incremented by 1
     """
     computed_gcd = gcd(a, b)
+    computed_int_gcd = _int_gcd(a, b)
     true_gcd = np.gcd(a, b)
 
     computed_lcm = lcm(a, b)
+    computed_int_lcm = _int_lcm(a, b)
     true_lcm = np.lcm(a, b)
 
     print("--------------------------------------------------")
     print("Test {n}:\n"
-          "gcd({a}, {b}) = {computed_gcd}. Should be {true_gcd}.\n"
-          "lcm({a}, {b}) = {computed_lcm}. Should be {true_lcm}".format(
+          "gcd({a}, {b}) = {computed_gcd}. _int_gcd({a}, {b}) = {computed_int_gcd}."
+          "Should be {true_gcd}.\n"
+          "lcm({a}, {b}) = {computed_lcm}. _int_lcm({a}, {b}) = {computed_int_lcm}."
+          "Should be {true_lcm}".format(
               n=n, a=a, b=b,
-              computed_gcd=computed_gcd, true_gcd=true_gcd,
-              computed_lcm=computed_lcm, true_lcm=true_lcm))
+              computed_gcd=computed_gcd, computed_int_gcd=computed_int_gcd, true_gcd=true_gcd,
+              computed_lcm=computed_lcm, computed_int_lcm=computed_int_lcm, true_lcm=true_lcm))
 
     if computed_gcd != true_gcd:
         raise Exception("Something went wrong. Computed gcd doesn't match actual gcd.")
@@ -94,8 +101,7 @@ def _nth_test(n: int, a: int, b: int) -> int:
 
     return n + 1
 
-@log_decorator
-def _test(number_of_random_tests: int=100, interval: tuple[int]=(-8, 9)):
+def _test(number_of_random_tests: int=100, interval: tuple[int, int]=(-8, 9)):
     """ Executes a batch of tests. For internal use only.
 
     Args:
@@ -115,8 +121,8 @@ def _test(number_of_random_tests: int=100, interval: tuple[int]=(-8, 9)):
         n = _nth_test(n, a, b)
 
     # test gcd and lcm for small integers
-    for a in range(interval):
-        for b in range(interval):
+    for a in range(*interval):
+        for b in range(*interval):
             n = _nth_test(n, a, b)
 
     print("--------------------------------------------------")
