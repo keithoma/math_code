@@ -8,19 +8,60 @@
 
 import numpy as np # just for testing purposes
 
-def gcd(a: int | list[int], b: None | int=None) -> int:
+def log_decorator(func):
+    def wrapper(*args, **kwargs):
+        print(f"Function {func.__name__} called with arguments {args} and {kwargs}")
+        result = func(*args, **kwargs)
+        print(f"Function {func.__name__} returned {result}")
+        return result
+    return wrapper
+
+def int_gcd(a: int, b: int) -> int:
+    while b:
+        a, b = b, a % b
+    return a
+
+def list_gcd(a: list[int]) -> int:
+    # Initialize the GCD with the first element 
+    result = a[0]
+
+    # Compute the GCD iteratively for each element in the list
+    for number in a[1:]:
+        result = int_gcd(result, number)
+
+    return result
+
+@log_decorator
+def gcd(a: int | list[int], b: int | list[int] | None=None) -> int:
     """ Returns the greatest common divisor of two integers.
     """
+    if isinstance(a, int) and isinstance(b, int):
+        int_gcd(a, b)
+    elif isinstance(a, int) and isinstance(b, list[int]):
+
+    elif isinstance(a, int) and isinstance(b, None):
+        return a
+    elif isinstance(a, list) and isinstance(b, int):
+        pass
+    elif isinstance(a, list) and isinstance(b, list):
+        pass
+    elif isinstance(a, list) and isinstance(b, None):
+        pass
+    else:
+        raise TypeError
+
     a, b = abs(a), abs(b)
     return gcd(b, a % b) if b else a
 
+@log_decorator
 def lcm(a: int | list[int], b: None | int=None) -> int:
     """ Returns the least common multiple of two integers.
     """
     a, b = abs(a), abs(b)
     return a * b // gcd(a, b) if gcd(a, b) != 0 else 0
 
-def _nth_test(n, a, b):
+@log_decorator
+def _nth_test(n: int, a: int, b: int) -> int:
     """ Executes a single test of gcd() and lcm(). For internal use only.
 
     Args:
@@ -53,7 +94,8 @@ def _nth_test(n, a, b):
 
     return n + 1
 
-def _test(number_of_random_tests=100, interval=(-8, 9)):
+@log_decorator
+def _test(number_of_random_tests: int=100, interval: tuple[int]=(-8, 9)):
     """ Executes a batch of tests. For internal use only.
 
     Args:
