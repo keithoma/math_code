@@ -44,7 +44,7 @@ def gcd(a: int | list[int], b: int | list[int] | None = None) -> int:
 
     if isinstance(a, list):
         if isinstance(b, int):
-                return _list_gcd(a + [b])
+            return _list_gcd(a + [b])
         if isinstance(b, list):
             return _list_gcd(a + b)
         raise TypeError("Invalid type for second argument. Expected int or list of int.")
@@ -58,7 +58,7 @@ def _int_lcm(a: int | list[int], b: None | int=None) -> int:
         return 0
     return abs(a * b) // _int_gcd(a, b)
 
-def _list_lcm(a: list[int]) -> int: 
+def _list_lcm(a: list[int]) -> int:
     if not a:
         return 0
     lcm_value = a[0]
@@ -85,7 +85,7 @@ def lcm(a: int | list[int], b: int | list[int] | None=None) -> int:
     else:
         raise TypeError("First argument must be either an integer or a list of integers.")
 
-def _nth_test(n: int, a: int, b: int) -> int:
+def _nth_test(n: int, a: int | list[int], b: int | None=None) -> int:
     """ Executes a single test of gcd() and lcm(). For internal use only.
 
     Args:
@@ -97,22 +97,33 @@ def _nth_test(n: int, a: int, b: int) -> int:
         (int): n from the argument incremented by 1
     """
     computed_gcd = gcd(a, b)
-    computed_int_gcd = _int_gcd(a, b)
-    true_gcd = np.gcd(a, b)
 
     computed_lcm = lcm(a, b)
-    computed_int_lcm = _int_lcm(a, b)
-    true_lcm = np.lcm(a, b)
+
+
+    if isinstance(a, int) and isinstance(b, int):
+        computed_aux_gcd = _int_gcd(a, b)
+        computed_aux_lcm = _int_lcm(a, b)
+
+        true_gcd = np.gcd(a, b)
+        true_lcm = np.lcm(a, b)
+
+    if isinstance(a, list) and not None:
+        computed_aux_gcd = _list_gcd(a)
+        computed_aux_lcm = _list_lcm(a)
+
+        true_gcd = np.gcd.reduce(a)
+        true_lcm = np.lcm.reduce(a)
 
     print("--------------------------------------------------")
     print("Test {n}:\n"
-          "gcd({a}, {b}) = {computed_gcd}. _int_gcd({a}, {b}) = {computed_int_gcd}."
+          "gcd({a}, {b}) = {computed_gcd}. _int_gcd({a}, {b}) = {computed_aux_gcd}."
           "Should be {true_gcd}.\n"
-          "lcm({a}, {b}) = {computed_lcm}. _int_lcm({a}, {b}) = {computed_int_lcm}."
+          "lcm({a}, {b}) = {computed_lcm}. _int_lcm({a}, {b}) = {computed_aux_lcm}."
           "Should be {true_lcm}".format(
               n=n, a=a, b=b,
-              computed_gcd=computed_gcd, computed_int_gcd=computed_int_gcd, true_gcd=true_gcd,
-              computed_lcm=computed_lcm, computed_int_lcm=computed_int_lcm, true_lcm=true_lcm))
+              computed_gcd=computed_gcd, computed_aux_gcd=computed_aux_gcd, true_gcd=true_gcd,
+              computed_lcm=computed_lcm, computed_aux_lcm=computed_aux_lcm, true_lcm=true_lcm))
 
     if computed_gcd != true_gcd or computed_lcm != true_lcm:
         raise Exception("Something went wrong. Computed gcd doesn't match actual gcd.")
@@ -142,6 +153,11 @@ def _test(number_of_random_tests: int=100, interval: tuple[int, int]=(-8, 9)):
     for a in range(*interval):
         for b in range(*interval):
             n = _nth_test(n, a, b)
+
+    # test gcd and lcm for lists
+    for k in range(1, 11):
+        a = np.random.randint(-1e2, 1e2, k).tolist()
+        n = _nth_test(n, a)
 
     print("--------------------------------------------------")
     return None
