@@ -50,36 +50,33 @@ class PowerSeries():
         # Make sure that the PowerSeries matches the given precision in length.
         self.match_precision_to(self._precision)
 
+    # 'coef' and 'coefficients' both point to '_coefficient'
+    # pylint: disable-all
     @property
-    def coef(self) -> list[R]:
-        return self._coefficients
+    def coef(self) -> list[R]: return self._coefficients
+
+    @property
+    def coefficients(self) -> list[R]: return self._coefficients
 
     @coef.setter
-    def coef(self, a) -> PowerSeries:
-        self._coefficients = a
-        return self
+    def coef(self, a): self._coefficients = a
+
+    @coefficients.setter
+    def coefficients(self, a): self._coefficients = a
 
     @property
-    def coefficients(self) -> list[R]:
-        return self._coefficients
-
-    @property
-    def prec(self) -> int:
-        return self._precision
+    def prec(self) -> int: return self._precision
 
     @prec.setter
-    def prec(self, k: int) -> PowerSeries:
-        self._precision = k
-        return self
+    def prec(self, k: int): self._precision = k
 
     @property
-    def precision(self) -> int:
-        return self._precision
+    def precision(self) -> int: return self._precision
 
     @precision.setter
-    def precision(self, k: int) -> PowerSeries:
-        self._precision = k
-        return self
+    def precision(self, k: int): self._precision = k
+
+    # pylint: enable-all
 
     @staticmethod
     def to_rational(coef: list[int]) -> list[R]:
