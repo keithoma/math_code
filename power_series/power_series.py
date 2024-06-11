@@ -23,9 +23,11 @@ class PowerSeries():
         coefficients: A list of Rational objects that represents the
           coefficients of a power series. The 0th entry is the constant term,
           the first entry is the monomial of first degree, and so on.
+        coef: Alias of coefficients.
         precision: An integer that sets how many of the first coefficients we
           are going to look at. Negative values will be overwritten by the
           length of the 'coefficients'.
+        prec: Alias of precision.
     """
     def __init__(self, coef: list[int], prec: int = -1):
         """Constructs a PowerSeries object.
@@ -66,13 +68,13 @@ class PowerSeries():
         self.coef = (self.coef + [R(0)] * (self.prec + 1 - len(self.coef)))
         return self
 
-    def multiplicative_inverse(self):
+    def multiplicative_inverse(self) -> PowerSeries:
         """Computes the multiplicative inverse."""
         b = [R(1) / self.coef[0]] # b_0 = 1 / a_0
 
         # after b_0, the coefficients are computed recursivly
         # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
-        def next_coefficient(n):
+        def next_coefficient(n: int) -> R:
             _ = -R(1) / self.coef[0]
             _ = _ * R.rational_sum(
                 [self.coef[i] * b[n - i] for i in range(1, n + 1)])
@@ -83,7 +85,10 @@ class PowerSeries():
 
         return PowerSeries(b)
 
-    def __str__(self):
+    def composition(self, other: PowerSeries) -> PowerSeries:
+        pass
+
+    def __str__(self) -> str:
         """Converts the list of coefficients as a readable string. Current
         format is (0, 1, 2).
         """
@@ -93,16 +98,30 @@ class PowerSeries():
         output_string = output_string[:-2] + ")"
         return output_string
 
-    def __add__(self, other):
+    def __pos__(self) -> PowerSeries:
+        """Returns a copy of the object."""
+        return PowerSeries(self.coef, self.prec)
+
+    def __neg__(self) -> PowerSeries:
+        """Returns a copy of the object, but the 'sign' is switched."""
+        return PowerSeries([-x for x in self.coef], self.prec)
+
+    def __add__(self, other) -> PowerSeries:
         self.prec = other.prec = max(self.prec, other.prec)
         self.match_precision_to()
         other.match_precision_to()
         return PowerSeries([l + r for l, r in zip(self.coef, other.coef)])
 
-    def __radd__(self, other):
+    def __radd__(self, other) -> PowerSeries:
         return self + other
 
-    def __mul__(self, other):
+    def __sub__(self, other) -> PowerSeries:
+        return self - other
+
+    def __rsub__(self, other) -> PowerSeries:
+        return other - self
+
+    def __mul__(self, other) -> PowerSeries:
         """Multiplies two PowerSeries.
         
         Product was implemented through Cauchy Product.
@@ -114,15 +133,18 @@ class PowerSeries():
         self.match_precision_to()
         other.match_precision_to()
 
-        def c(k):
+        def c(k: int) -> R:
             _ = [self.coef[l] * other.coef[k - l] for l in range(k + 1)]
             return R.rational_sum(_)
 
         return PowerSeries([c(k) for k in range(self.precision + 1)])
 
-    def __rmul__(self, other):
+    def __rmul__(self, other: PowerSeries):
         return self * other
 
+
+    def __pow__(self, k: int):
+        return [self for _ in range(k)]
 
 if __name__ == "__main__":
     power1 = PowerSeries([1, 1, 1], 20)

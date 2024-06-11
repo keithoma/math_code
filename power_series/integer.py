@@ -66,7 +66,7 @@ def gcd(a: IntOrList, b: Optional[IntOrList]=None) -> int:
         print(type(b))
         raise TypeError("Invalid type for second argument. Expected int or list of int.")
 
-    return result # pylint: disable=possibly-used-before-assignment
+    return result
 
 def _int_lcm(a: int, b: int) -> int:
     """Computes the least common multiple of two integers."""
