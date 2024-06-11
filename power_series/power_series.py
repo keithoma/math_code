@@ -13,8 +13,7 @@ PowerSeries class defines an attribute called 'precision' that sets how many of 
 coefficients we will care about. The coefficients themselves are saved as a list of Rational
 objects (see rational.py) in the attribute 'coefficients'.
 """
-
-
+from __future__ import annotations
 from rational import Rational as R
 
 class PowerSeries():
@@ -56,11 +55,13 @@ class PowerSeries():
         return [R(a) for a in coef]
 
     def match_precision_to(self, prec: int = None) -> PowerSeries:
-        """"""
+        """Appends zeros as Rational objects to 'coefficients' to match the
+        'precision'.
+        """
         # If a value was given for precision, update the attribute.
         if prec is not None:
-            self.precision = prec
-        
+            self.prec = prec
+
         # Append 0s as Rational objects at the end of the coefficients
         self.coef = (self.coef + [R(0)] * (self.prec + 1 - len(self.coef)))
         return self
@@ -74,7 +75,7 @@ class PowerSeries():
         def next_coefficient(n):
             _ = -R(1) / self.coef[0]
             _ = _ * R.rational_sum(
-                [self.coefficients[i] * b[n - i] for i in range(1, n + 1)])
+                [self.coef[i] * b[n - i] for i in range(1, n + 1)])
             return _
 
         for k in range(1, self.prec):
@@ -82,24 +83,9 @@ class PowerSeries():
 
         return PowerSeries(b)
 
-
-    def cauchy_product(self, right):
-
-        # we need to set the precision to the degree of the product which is the sum of both degrees
-        self.precision = right.precision = self.precision + right.precision
-        self.match_precision_to()
-        right.match_precision_to()
-
-        def c(k):
-            return Rational.rational_sum(
-                [self.coefficients[l] * right.coefficients[k - l] for l in range(k + 1)]
-            )
-
-        return PowerSeries([c(k) for k in range(self.precision + 1)])
-
     def __str__(self):
-        """ Converts the list of coefficients as a readable string. Current format is
-            (0, 1, 2).
+        """Converts the list of coefficients as a readable string. Current
+        format is (0, 1, 2).
         """
         output_string = "("
         for rational in self.coefficients:
@@ -108,16 +94,34 @@ class PowerSeries():
         return output_string
 
     def __add__(self, other):
-        self.precision = other.precision = max(self.precision, other.precision)
+        self.prec = other.prec = max(self.prec, other.prec)
+        self.match_precision_to()
+        other.match_precision_to()
+        return PowerSeries([l + r for l, r in zip(self.coef, other.coef)])
+
+    def __radd__(self, other):
+        return self + other
+
+    def __mul__(self, other):
+        """Multiplies two PowerSeries.
+        
+        Product was implemented through Cauchy Product.
+
+        https://en.wikipedia.org/wiki/Cauchy_product
+        """
+        # highest degree of the product is:
+        self.prec = other.prec = self.prec + other.prec
         self.match_precision_to()
         other.match_precision_to()
 
-        return PowerSeries(
-            [left + right for left, right in zip(self.coefficients, other.coefficients)]
-        )
-    
-    def __radd__(self, other):
-        return self.__add__(other)
+        def c(k):
+            _ = [self.coef[l] * other.coef[k - l] for l in range(k + 1)]
+            return R.rational_sum(_)
+
+        return PowerSeries([c(k) for k in range(self.precision + 1)])
+
+    def __rmul__(self, other):
+        return self * other
 
 
 if __name__ == "__main__":
@@ -134,5 +138,5 @@ if __name__ == "__main__":
     print("\n\n\n")
     print(mul_inverse)
     print("\n\n\n")
-    print(power1.cauchy_product(mul_inverse))
+    print(power1 * mul_inverse)
     # print(cauchy.precision)
