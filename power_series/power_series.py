@@ -182,9 +182,9 @@ class PowerSeries():
 
     def composition(self, other: PowerSeries) -> PowerSeries:
         """Computes the composition, i.e. self(other(X))."""
-        h = self.prec * other.prec
-        self.match_precision_to(h)
-        other.match_precision_to(h)
+        _ = self.prec * other.prec
+        self.match_precision_to(_)
+        other.match_precision_to(_)
 
         result_coefs = [R(0)] * (self.prec + 1)
         other_power = PowerSeries([1], self.prec)  # Start with the series representing 1
@@ -198,23 +198,45 @@ class PowerSeries():
 
         return PowerSeries(result_coefs, self.prec)
 
+    def lagrange_inversion_formula(self) -> PowerSeries:
+        """Compute the Lagrange inversion formula to find the inverse of the power series."""
+        #  if self.coef[0] != R(0):
+        #      raise ValueError("The constant term must be zero for the Lagrange inversion formula.")
 
+        # We need the multiplicative inverse of the derivative of the series.
+        derivative_series = self.derivative()
 
+        # Compute the coefficients for the inverse series using the formula.
+        inverse_coeffs = [R(0)]  # Since the constant term for the inverse will be zero.
+        for n in range(1, self.prec + 1):
+            term_sum = R(0)
+            for k in range(n):
+                term_sum += (R(k + 1) * derivative_series.coef[k]) * inverse_coeffs[n - k - 1]
+            inverse_coeff = -term_sum / derivative_series.coef[0]
+            inverse_coeffs.append(inverse_coeff)
 
+            print(inverse_coeff)
+
+        return PowerSeries(inverse_coeffs)
+
+    def derivative(self) -> PowerSeries:
+        """Compute the derivative of the power series."""
+        if len(self.coef) <= 1:
+            return PowerSeries([0])  # Derivative of a constant term is zero.
+
+        derivative_coeffs = [R(i) * self.coef[i] for i in range(1, len(self.coef))]
+        return PowerSeries(derivative_coeffs)
+
+# Example to test the lagrange_inversion_formula method:
 def main() -> None:
-    """"""
-    ps1 = PowerSeries([10, 7, 3, 1])
-    #  print(ps1.__dict__)
-    #  print(f"_coefficients: {ps1._coefficients}")
-    #  print(f"coefficients: {ps1.coefficients}")
-    #  print(f"coef: {ps1.coef}")
-    # print(f"ps1 = {ps1}")
-    # print(f"^2  = {ps1 ** 2}")
-    # print(f"^3  = {ps1 ** 3}")
-    ps2 = PowerSeries([10, 7, 3, 1])
-    ps3 = PowerSeries([0, 2, 3])
-    # print(ps1 ** 3)
-    print(ps2.composition(ps3))
+    ps1 = PowerSeries([0, 1, 2, 3, 4], 10)
+    inv = ps1.lagrange_inversion_formula()
+    print(ps1)
+    print(inv)
+    # inverse_ps1 = ps1.lagrange_inversion_formula()
+    # print(f"Original Power Series: {ps1}")
+    # print(f"Inverse Power Series: {inverse_ps1}")
+    # print(f"Product {ps1.composition(inverse_ps1)}")
 
 if __name__ == "__main__":
     main()

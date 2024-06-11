@@ -55,8 +55,12 @@ class Rational():
 
         return None
 
-    def _reduce(self) -> Rational:
+    def _reduce(self) -> None:
         """Reduces the Rational object to its simplest form."""
+        if self.n == 0:
+            self.d = 1
+            return
+
         g = integer.gcd(self.n, self.d)
         self.n = self.n // g
         self.d = self.d // g
@@ -64,7 +68,7 @@ class Rational():
         if self.n == 0:
             self.d = 1
 
-        return self
+        return None
 
     @classmethod
     def rational_sum(cls, list_of_rationals: list[Rational]) -> Rational:
