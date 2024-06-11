@@ -28,53 +28,56 @@ class PowerSeries():
           are going to look at. Negative values will be overwritten by the
           length of the 'coefficients'.
     """
-
-    def __init__(self, coefficients: list[int], precision: int = -1):
+    def __init__(self, coef: list[int], prec: int = -1):
         """Constructs a PowerSeries object.
         
         Args:
-            coefficients: A list of ints.
-            precision: An integer.
-        
+            coef: A list of ints.
+            prec: An integer.
         """
         # We save the given coefficients as a list of Rational objects.
-        self.coefficients: list[R] = PowerSeries.to_rational(coefficients)
+        self.coef: list[R] = PowerSeries.to_rational(coef)
+        self.coefficients: list[R] = self.coef
 
         # Save precision as an attribute. If the given value is negative, we
         # take the length of coefficients as our precision.
-        if precision < 0:
-            self.precision = len(self.coefficients) - 1
+        if prec < 0:
+            self.prec = len(self.coef) - 1
         else:
-            self.precision = precision
+            self.prec: int = prec
+        self.precision: int = self.prec
 
         # Make sure that the PowerSeries matches the given precision in length.
         self.match_precision_to(self.precision)
 
     @staticmethod
-    def to_rational(coefficients: list[int]) -> list[R]:
+    def to_rational(coef: list[int]) -> list[R]:
         """Converts a list of int to list of Rational."""
-        return [R(a) for a in coefficients]
+        return [R(a) for a in coef]
 
-    def match_precision_to(self, precision: int = None) -> PowerSeries:
+    def match_precision_to(self, prec: int = None) -> PowerSeries:
         """"""
-        # if a value was given for precision, update the attribute
-        if precision is not None:
-            self.precision = precision
+        # If a value was given for precision, update the attribute.
+        if prec is not None:
+            self.precision = prec
         
-        # append 0s as Rational objects at the end of the coefficients
-        self.coefficients = (
-            self.coefficients
-            + [R(0)] * (self.precision + 1 - len(self.coefficients))
-        )
+        # Append 0s as Rational objects at the end of the coefficients
+        self.coef = (self.coef + [R(0)] * (self.prec + 1 - len(self.coef)))
         return self
 
     def multiplicative_inverse(self):
-        b = [R(1) / self.coefficients[0]] # b_0 = 1 / a_0
+        """Computes the multiplicative inverse."""
+        b = [R(1) / self.coef[0]] # b_0 = 1 / a_0
 
         # after b_0, the coefficients are computed recursivly
         # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
-        def next_coefficient(n): return - (R(1) / self.coefficients[0]) * Rational.rational_sum([self.coefficients[i] * b[n - i] for i in range(1, n + 1)])
-        for k in range(1, self.precision):
+        def next_coefficient(n):
+            _ = -R(1) / self.coef[0]
+            _ = _ * R.rational_sum(
+                [self.coefficients[i] * b[n - i] for i in range(1, n + 1)])
+            return _
+
+        for k in range(1, self.prec):
             b.append(next_coefficient(k))
 
         return PowerSeries(b)

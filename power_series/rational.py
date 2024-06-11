@@ -140,8 +140,7 @@ class Rational():
         return self.__rmul__(other)
 
     def __truediv__(self, other: Rational) -> Rational:
-        """Division for two Rational objects.
-        """
+        """Division for two Rational objects."""
         return self.__mul__(other.reciprocal())
 
 if __name__ == "__main__":
