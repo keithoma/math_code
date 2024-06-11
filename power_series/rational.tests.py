@@ -4,15 +4,16 @@
 from rational import Rational as R
 
 def _kth_test_construction(k: int, n: int, d: int):
-    """"""
+    """Executes a single test."""
     frac = R(n, d)
-    print("n = {} | d = {}".format(n, d))
-    print("Rational: {}".format(frac))
-    print("Reciprocal: {}".format(frac.reciprocal()))
-    print("Negation: {}".format(frac.__neg__()))
+    print(f"n = {n} | d = {d}")
+    print(f"Rational: {frac}")
+    print(f"Reciprocal: {frac.reciprocal}")
+    print(f"Negation: {-frac}")
     return k + 1
 
 def main():
+    """Executes the tests."""
     while True:
         k = 1
         n = int(input("n = ...?\n"))
