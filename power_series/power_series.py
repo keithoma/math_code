@@ -47,34 +47,40 @@ class PowerSeries():
         else:
             self._precision: int = precision
 
+        self.coefficients = self.coef
+        self.precision = self.prec
+
         # Make sure that the PowerSeries matches the given precision in length.
         self.match_precision_to(self._precision)
 
-    # 'coef' and 'coefficients' both point to '_coefficient'
     # pylint: disable-all
+
+    # 'coef' and 'coefficients' both point to '_coefficient'
     @property
     def coef(self) -> list[R]: return self._coefficients
 
-    @property
-    def coefficients(self) -> list[R]: return self._coefficients
+    # @property
+    # def coefficients(self) -> list[R]: return self._coefficients
 
     @coef.setter
     def coef(self, a): self._coefficients = a
 
-    @coefficients.setter
-    def coefficients(self, a): self._coefficients = a
+    # @coefficients.setter
+    # def coefficients(self, a): self._coefficients = a
 
+    # 'prec' and 'precision' both point to '_precision'
     @property
     def prec(self) -> int: return self._precision
+
+    # @property
+    # def precision(self) -> int: return self._precision
 
     @prec.setter
     def prec(self, k: int): self._precision = k
 
-    @property
-    def precision(self) -> int: return self._precision
+    # @precision.setter
+    # def precision(self, k: int): self._precision = k
 
-    @precision.setter
-    def precision(self, k: int): self._precision = k
 
     # pylint: enable-all
 
@@ -83,7 +89,7 @@ class PowerSeries():
         """Converts a list of int to list of Rational."""
         return [R(a) for a in coef]
 
-    def match_precision_to(self, k: int = None) -> PowerSeries:
+    def match_precision_to(self, k: int = None) -> None:
         """Appends zeros as Rational objects to 'coefficients' to match the
         'precision'.
         """
@@ -95,7 +101,7 @@ class PowerSeries():
             self.coef() + [R(0)] * (self.prec() + 1 - len(self.coef()))
         )
 
-        return self
+        return None
 
     def multiplicative_inverse(self) -> PowerSeries:
         """Computes the multiplicative inverse."""
