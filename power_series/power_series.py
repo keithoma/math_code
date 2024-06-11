@@ -182,27 +182,27 @@ class PowerSeries():
 
     def composition(self, other: PowerSeries) -> PowerSeries:
         """Computes the composition, i.e. self(other(X))."""
+        h = self.prec * other.prec
+        self.match_precision_to(h)
+        other.match_precision_to(h)
+
         result_coefs = [R(0)] * (self.prec + 1)
         other_power = PowerSeries([1], self.prec)  # Start with the series representing 1
-        
-        for i, coef in enumerate(self.coef):
 
-            term = PowerSeries([coef], self.prec) * other_power
-            
-            for j in range(len(term.coef)):
-            
-                if j < len(result_coefs):
-            
-                    result_coefs[j] += term.coef[j]
-            
-            other_power = other_power * other  # Update to next power of 'other'
-        
+        for number in self.coef:
+            term = PowerSeries([number], self.prec) * other_power
+            for j in enumerate(term.coef):
+                if j[0] < len(result_coefs):
+                    result_coefs[j[0]] += term.coef[j[0]]
+            other_power = other_power * other
+
         return PowerSeries(result_coefs, self.prec)
 
 
 
 
 def main() -> None:
+    """"""
     ps1 = PowerSeries([10, 7, 3, 1])
     #  print(ps1.__dict__)
     #  print(f"_coefficients: {ps1._coefficients}")
@@ -211,8 +211,8 @@ def main() -> None:
     # print(f"ps1 = {ps1}")
     # print(f"^2  = {ps1 ** 2}")
     # print(f"^3  = {ps1 ** 3}")
-    ps2 = PowerSeries([1, 0, 1])
-    ps3 = PowerSeries([2, 3])
+    ps2 = PowerSeries([10, 7, 3, 1])
+    ps3 = PowerSeries([0, 2, 3])
     # print(ps1 ** 3)
     print(ps2.composition(ps3))
 
