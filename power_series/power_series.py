@@ -42,6 +42,8 @@ class PowerSeries():
         # Save precision as an attribute. If the given value is negative, we
         # take the length of coefficients as our precision.
         if k < 0:
+            # while self._coefficients[-1] == 0:
+            #     self._coefficients.pop()
             self._precision: int = len(self._coefficients) - 1
         else:
             self._precision: int = k
@@ -200,39 +202,36 @@ class PowerSeries():
 
     def lagrange_inversion_formula(self) -> PowerSeries:
         """Compute the Lagrange inversion formula to find the inverse of the power series."""
-        #  if self.coef[0] != R(0):
-        #      raise ValueError("The constant term must be zero for the Lagrange inversion formula.")
+        def u(k):
+            _ = PowerSeries(self.coef[1:], 10)
+            _ = _.multiplicative_inverse()
+            _ = _ ** (k + 1)
+            print(f"coef ={_.coef}")
+            _ = _.coef[k]
+            print(f"u_k = {_}"  )
+            return _
 
-        # We need the multiplicative inverse of the derivative of the series.
-        derivative_series = self.derivative()
+        a = [0, 1]
+        for k in range(2, 5):
+            _ = R(u(k), k)
+            a.append(_)
 
-        # Compute the coefficients for the inverse series using the formula.
-        inverse_coeffs = [R(0)]  # Since the constant term for the inverse will be zero.
-        for n in range(1, self.prec + 1):
-            term_sum = R(0)
-            for k in range(n):
-                term_sum += (R(k + 1) * derivative_series.coef[k]) * inverse_coeffs[n - k - 1]
-            inverse_coeff = -term_sum / derivative_series.coef[0]
-            inverse_coeffs.append(inverse_coeff)
-
-            print(inverse_coeff)
-
-        return PowerSeries(inverse_coeffs)
-
-    def derivative(self) -> PowerSeries:
-        """Compute the derivative of the power series."""
-        if len(self.coef) <= 1:
-            return PowerSeries([0])  # Derivative of a constant term is zero.
-
-        derivative_coeffs = [R(i) * self.coef[i] for i in range(1, len(self.coef))]
-        return PowerSeries(derivative_coeffs)
+        return PowerSeries(a)
 
 # Example to test the lagrange_inversion_formula method:
 def main() -> None:
-    ps1 = PowerSeries([0, 1, 2, 3, 4], 10)
-    inv = ps1.lagrange_inversion_formula()
+    ps1 = PowerSeries([0, 1, 1], 10)
+    lag = ps1.lagrange_inversion_formula()
+
+    print("\n\n\n---------------")
     print(ps1)
-    print(inv)
+    print(lag)
+
+    cmp = ps1.composition(lag)
+    print(cmp)
+    # inv = ps1.lagrange_inversion_formula()
+    # print(ps1)
+    # print(inv)
     # inverse_ps1 = ps1.lagrange_inversion_formula()
     # print(f"Original Power Series: {ps1}")
     # print(f"Inverse Power Series: {inverse_ps1}")
