@@ -30,19 +30,19 @@ class Rational():
 
         # Rational and int
         elif isinstance(n, Rational) and isinstance(d, int):
-            self.sign = -1 if n.sign() * d < 0 else 1
+            self.sign = -1 if n.sign * d < 0 else 1
             self.n = n.numerator
             self.d = n.denominator * abs(d)
 
         # int and Rational
         elif isinstance(n, int) and isinstance(d, Rational):
-            self.sign = -1 if n * d.sign() < 0 else 1
+            self.sign = -1 if n * d.sign < 0 else 1
             self.n = abs(n) * d.denominator
             self.d = d.numerator
 
         # two Rational
         elif isinstance(n, Rational) and isinstance(d, Rational):
-            self.sign = -1 if n.sign() * d.sign() < 0 else 1
+            self.sign = -1 if n.sign * d.sign < 0 else 1
             self.n = n.numerator * d.denominator
             self.d = n.denominator * d.numerator
 
