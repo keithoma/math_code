@@ -12,7 +12,6 @@ def _kth_test_construction(k: int, n: int, d: int):
     print("Negation: {}".format(frac.__neg__()))
     return k + 1
 
-
 def main():
     while True:
         k = 1

@@ -2,7 +2,6 @@
 """
 
 from __future__ import annotations
-from typing import Union
 import integer
 
 class Rational():
@@ -13,10 +12,10 @@ class Rational():
         n: The numerator. 'numerator' is an alias.
         d: The denominator. 'denominator' is an alias.
     """
-    def __init__(self, n: IntOrRational, d: IntOrRational = 1) -> None:
-        """
-        """
-        self.sign: bool
+    # pylint: disable-next=useless-return
+    def __init__(self, n: int | Rational, d: int | Rational = 1) -> None:
+        """Constructs a Rational object."""
+        self.sign: int
         self.n: int
         self.d: int
 
@@ -56,10 +55,6 @@ class Rational():
 
         return None
 
-    def sign(self) -> int:
-        """-1 if Rational object is negative, else 1."""
-        return -1 if False else 1
-
     def _reduce(self) -> Rational:
         """Reduces the Rational object to its simplest form."""
         g = integer.gcd(self.n, self.d)
@@ -85,40 +80,66 @@ class Rational():
         
         Current format is: -1 / 3
         """
-        return "{}{}{}".format(
-            "-" if self.sign < 0 else "",
-            self.numerator,
-            " / " + str(self.denominator) if self.denominator != 1 else ""
-        )
+        pm = "-" if self.sign < 0 else ""
+        right = " / " + str(self.denominator) if self.denominator != 1 else ""
+        return f"{pm}{self.n}{right}"
+
+    def __repr__(self) -> str:
+        """Returns a printable String.
+        
+        Current format is: -1 / 3, Equivalent to __str__().
+        """
+        pm = "-" if self.sign < 0 else ""
+        right = " / " + str(self.denominator) if self.denominator != 1 else ""
+        return f"{pm}{self.n}{right}"
+
+    def __pos__(self) -> Rational:
+        """Returns a copy of the object."""
+        return Rational(self.sign * self.n, self.d)
 
     def __neg__(self) -> Rational:
         """Returns a copy of the object, but the 'sign' is switched."""
-        return Rational(- self.sign * self.numerator, self.denominator)
+        return Rational(- self.sign * self.n, self.d)
+
+    def __abs__(self) -> Rational:
+        """Returns a copy of the object, but the sign is positive."""
+        return Rational(self.n, self.d)
 
     def __add__(self, other: Rational) -> Rational:
-        """ Addition for two Rational object.
-        """
-        return Rational(
-            self.sign * self.numerator * other.denominator
-            + other.sign * other.numerator * self.denominator,
-            self.denominator * other.denominator
-        )
-    
+        """Addition for two Rational objects."""
+        n, d = self.sign * self.n, self.d
+        p, q = other.sign * other.n, other.d
+        return Rational(n * q + p * d, d * q)
+
     def __radd__(self, other: Rational) -> Rational:
-        """ Reverse addition for two Rational object. Equivalent to __add__.
+        """Reverse addition for two Rational objects.
+        
+        Equivalent to __add__.
         """
         return self.__add__(other)
 
+    def __sub__(self, other: Rational) -> Rational:
+        return self - other
+
+    def __rsub__(self, other: Rational) -> Rational:
+        return other - self
+
     def __mul__(self, other: Rational) -> Rational:
-        return Rational(
-            self.sign * self.numerator * other.sign * other.numerator,
-            self.denominator * other.denominator
-        )
+        """Multiplication for two Rational objects."""
+        n, d = self.sign * self.n, self.d
+        p, q = other.sign * other.n, other.d
+        return Rational(n * p, d * q)
 
     def __rmul__(self, other: Rational) -> Rational:
+        """Reverse multiplication for two Rational objects.
+        
+        Equivalent to __mul__.
+        """
         return self.__rmul__(other)
 
     def __truediv__(self, other: Rational) -> Rational:
+        """Division for two Rational objects.
+        """
         return self.__mul__(other.reciprocal())
 
 if __name__ == "__main__":
