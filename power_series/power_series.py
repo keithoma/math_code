@@ -186,10 +186,15 @@ class PowerSeries():
         other_power = PowerSeries([1], self.prec)  # Start with the series representing 1
         
         for i, coef in enumerate(self.coef):
+
             term = PowerSeries([coef], self.prec) * other_power
+            
             for j in range(len(term.coef)):
+            
                 if j < len(result_coefs):
+            
                     result_coefs[j] += term.coef[j]
+            
             other_power = other_power * other  # Update to next power of 'other'
         
         return PowerSeries(result_coefs, self.prec)
