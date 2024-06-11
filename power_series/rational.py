@@ -119,9 +119,11 @@ class Rational():
         return self.__add__(other)
 
     def __sub__(self, other: Rational) -> Rational:
+        """Subtraction of a Rational object from another."""
         return self - other
 
     def __rsub__(self, other: Rational) -> Rational:
+        """Reversed subtraction of two Rational objects."""
         return other - self
 
     def __mul__(self, other: Rational) -> Rational:
