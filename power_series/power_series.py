@@ -29,7 +29,7 @@ class PowerSeries():
           length of the 'coefficients'.
         prec: Alias of precision.
     """
-    def __init__(self, coefficients: list[int], precision: int = -1):
+    def __init__(self, list_of_int: list[int], k: int = -1):
         """Constructs a PowerSeries object.
         
         Args:
@@ -37,149 +37,136 @@ class PowerSeries():
             prec: An integer.
         """
         # We save the given coefficients as a list of Rational objects.
-        # self.coef: list[R] = PowerSeries.to_rational(coef)
-        self._coefficients: list[R] = coefficients
+        self._coefficients: list[R] = self.to_rational(list_of_int)
 
         # Save precision as an attribute. If the given value is negative, we
         # take the length of coefficients as our precision.
-        if precision < 0:
+        if k < 0:
             self._precision: int = len(self._coefficients) - 1
         else:
-            self._precision: int = precision
-
-        self.coefficients = self.coef
-        self.precision = self.prec
+            self._precision: int = k
 
         # Make sure that the PowerSeries matches the given precision in length.
         self.match_precision_to(self._precision)
 
-    # pylint: disable-all
-
-    # 'coef' and 'coefficients' both point to '_coefficient'
-    @property
-    def coef(self) -> list[R]: return self._coefficients
-
-    # @property
-    # def coefficients(self) -> list[R]: return self._coefficients
-
-    @coef.setter
-    def coef(self, a): self._coefficients = a
-
-    # @coefficients.setter
-    # def coefficients(self, a): self._coefficients = a
-
-    # 'prec' and 'precision' both point to '_precision'
-    @property
-    def prec(self) -> int: return self._precision
-
-    # @property
-    # def precision(self) -> int: return self._precision
-
-    @prec.setter
-    def prec(self, k: int): self._precision = k
-
-    # @precision.setter
-    # def precision(self, k: int): self._precision = k
-
-
-    # pylint: enable-all
-
     @staticmethod
-    def to_rational(coef: list[int]) -> list[R]:
+    def to_rational(list_of_int: list[int]) -> list[R]:
         """Converts a list of int to list of Rational."""
-        return [R(a) for a in coef]
+        return [R(a) for a in list_of_int]
 
     def match_precision_to(self, k: int = None) -> None:
         """Appends zeros as Rational objects to 'coefficients' to match the
         'precision'.
         """
         # If a value was given for precision, update the attribute.
-        if k is not None: self.prec(k)
+        if k is not None:
+            self._coefficients = k
 
         # Append 0s as Rational objects at the end of the coefficients
-        self.coefficients(
-            self.coef() + [R(0)] * (self.prec() + 1 - len(self.coef()))
+        self._coefficients += [R(0)] * (
+            self._precision + 1 - len(self._coefficients)
         )
 
-        return None
+    @property
+    def coefficients(self) -> list[R]:
+        """Coefficients of the power series."""
+        return self._coefficients
 
-    def multiplicative_inverse(self) -> PowerSeries:
-        """Computes the multiplicative inverse."""
-        b = [R(1) / self.coef[0]] # b_0 = 1 / a_0
+    @coefficients.setter
+    def coefficients(self, a) -> None:
+        self._coefficients = a
 
-        # after b_0, the coefficients are computed recursivly
-        # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
-        def next_coefficient(n: int) -> R:
-            _ = -R(1) / self.coef[0]
-            _ = _ * R.rational_sum(
-                [self.coef[i] * b[n - i] for i in range(1, n + 1)])
-            return _
+    @property
+    def precision(self) -> int:
+        """Precision, i.e. the number of the first coefficients we care about."""
+        return self._precision
 
-        for k in range(1, self.prec):
-            b.append(next_coefficient(k))
+    @precision.setter
+    def prec(self, k: int) -> None:
+        self._precision = k
 
-        return PowerSeries(b)
+    # alias for coef and prec
+    coef = coefficients
+    prec = precision
 
-    def composition(self, other: PowerSeries) -> PowerSeries:
-        pass
+    # def multiplicative_inverse(self) -> PowerSeries:
+    #     """Computes the multiplicative inverse."""
+    #     # b_0 = 1 / a_0
+    #     b = [R(1) / self.coef()[0]]
 
-    def __str__(self) -> str:
-        """Converts the list of coefficients as a readable string. Current
-        format is (0, 1, 2).
-        """
-        output_string = "("
-        for rational in self.coefficients:
-            output_string += str(rational) + ", "
-        output_string = output_string[:-2] + ")"
-        return output_string
+    #     # after b_0, the coefficients are computed recursivly
+    #     # b_n = - (1 / a_0) * sum_{i=1}^n a_i b_{n-i}
+    #     def next_coefficient(n: int) -> R:
+    #         _ = -R(1) / self.coef[0]
+    #         _ = _ * R.rational_sum(
+    #             [self.coef[i] * b[n - i] for i in range(1, n + 1)])
+    #         return _
 
-    def __pos__(self) -> PowerSeries:
-        """Returns a copy of the object."""
-        return PowerSeries(self.coef, self.prec)
+    #     for k in range(1, self.prec):
+    #         b.append(next_coefficient(k))
 
-    def __neg__(self) -> PowerSeries:
-        """Returns a copy of the object, but the 'sign' is switched."""
-        return PowerSeries([-x for x in self.coef], self.prec)
+    #     return PowerSeries(b)
 
-    def __add__(self, other) -> PowerSeries:
-        self.prec = other.prec = max(self.prec, other.prec)
-        self.match_precision_to()
-        other.match_precision_to()
-        return PowerSeries([l + r for l, r in zip(self.coef, other.coef)])
+    # def composition(self, other: PowerSeries) -> PowerSeries:
+    #     pass
 
-    def __radd__(self, other) -> PowerSeries:
-        return self + other
+    # def __str__(self) -> str:
+    #     """Converts the list of coefficients as a readable string. Current
+    #     format is (0, 1, 2).
+    #     """
+    #     output_string = "("
+    #     for rational in self.coefficients:
+    #         output_string += str(rational) + ", "
+    #     output_string = output_string[:-2] + ")"
+    #     return output_string
 
-    def __sub__(self, other) -> PowerSeries:
-        return self - other
+    # def __pos__(self) -> PowerSeries:
+    #     """Returns a copy of the object."""
+    #     return PowerSeries(self.coef, self.prec)
 
-    def __rsub__(self, other) -> PowerSeries:
-        return other - self
+    # def __neg__(self) -> PowerSeries:
+    #     """Returns a copy of the object, but the 'sign' is switched."""
+    #     return PowerSeries([-x for x in self.coef], self.prec)
 
-    def __mul__(self, other) -> PowerSeries:
-        """Multiplies two PowerSeries.
+    # def __add__(self, other) -> PowerSeries:
+    #     self.prec = other.prec = max(self.prec, other.prec)
+    #     self.match_precision_to()
+    #     other.match_precision_to()
+    #     return PowerSeries([l + r for l, r in zip(self.coef, other.coef)])
+
+    # def __radd__(self, other) -> PowerSeries:
+    #     return self + other
+
+    # def __sub__(self, other) -> PowerSeries:
+    #     return self - other
+
+    # def __rsub__(self, other) -> PowerSeries:
+    #     return other - self
+
+    # def __mul__(self, other) -> PowerSeries:
+    #     """Multiplies two PowerSeries.
         
-        Product was implemented through Cauchy Product.
+    #     Product was implemented through Cauchy Product.
 
-        https://en.wikipedia.org/wiki/Cauchy_product
-        """
-        # highest degree of the product is:
-        self.prec = other.prec = self.prec + other.prec
-        self.match_precision_to()
-        other.match_precision_to()
+    #     https://en.wikipedia.org/wiki/Cauchy_product
+    #     """
+    #     # highest degree of the product is:
+    #     self.prec = other.prec = self.prec + other.prec
+    #     self.match_precision_to()
+    #     other.match_precision_to()
 
-        def c(k: int) -> R:
-            _ = [self.coef[l] * other.coef[k - l] for l in range(k + 1)]
-            return R.rational_sum(_)
+    #     def c(k: int) -> R:
+    #         _ = [self.coef[l] * other.coef[k - l] for l in range(k + 1)]
+    #         return R.rational_sum(_)
 
-        return PowerSeries([c(k) for k in range(self.precision + 1)])
+    #     return PowerSeries([c(k) for k in range(self.precision + 1)])
 
-    def __rmul__(self, other: PowerSeries):
-        return self * other
+    # def __rmul__(self, other: PowerSeries):
+    #     return self * other
 
 
-    def __pow__(self, k: int):
-        return [self for _ in range(k)]
+    # def __pow__(self, k: int):
+    #     return [self for _ in range(k)]
 
 def main() -> None:
     ps1 = PowerSeries([10, 7, 3, 1])
