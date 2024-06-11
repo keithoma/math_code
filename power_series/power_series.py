@@ -29,7 +29,7 @@ class PowerSeries():
           length of the 'coefficients'.
         prec: Alias of precision.
     """
-    def __init__(self, coef: list[int], prec: int = -1):
+    def __init__(self, coefficients: list[int], precision: int = -1):
         """Constructs a PowerSeries object.
         
         Args:
@@ -37,35 +37,67 @@ class PowerSeries():
             prec: An integer.
         """
         # We save the given coefficients as a list of Rational objects.
-        self.coef: list[R] = PowerSeries.to_rational(coef)
-        self.coefficients: list[R] = self.coef
+        # self.coef: list[R] = PowerSeries.to_rational(coef)
+        self._coefficients: list[R] = coefficients
 
         # Save precision as an attribute. If the given value is negative, we
         # take the length of coefficients as our precision.
-        if prec < 0:
-            self.prec = len(self.coef) - 1
+        if precision < 0:
+            self._precision: int = len(self._coefficients) - 1
         else:
-            self.prec: int = prec
-        self.precision: int = self.prec
+            self._precision: int = precision
 
         # Make sure that the PowerSeries matches the given precision in length.
-        self.match_precision_to(self.precision)
+        self.match_precision_to(self._precision)
+
+    @property
+    def coef(self) -> list[R]:
+        return self._coefficients
+
+    @coef.setter
+    def coef(self, a) -> PowerSeries:
+        self._coefficients = a
+        return self
+
+    @property
+    def coefficients(self) -> list[R]:
+        return self._coefficients
+
+    @property
+    def prec(self) -> int:
+        return self._precision
+
+    @prec.setter
+    def prec(self, k: int) -> PowerSeries:
+        self._precision = k
+        return self
+
+    @property
+    def precision(self) -> int:
+        return self._precision
+
+    @precision.setter
+    def precision(self, k: int) -> PowerSeries:
+        self._precision = k
+        return self
 
     @staticmethod
     def to_rational(coef: list[int]) -> list[R]:
         """Converts a list of int to list of Rational."""
         return [R(a) for a in coef]
 
-    def match_precision_to(self, prec: int = None) -> PowerSeries:
+    def match_precision_to(self, k: int = None) -> PowerSeries:
         """Appends zeros as Rational objects to 'coefficients' to match the
         'precision'.
         """
         # If a value was given for precision, update the attribute.
-        if prec is not None:
-            self.prec = prec
+        if k is not None: self.prec(k)
 
         # Append 0s as Rational objects at the end of the coefficients
-        self.coef = (self.coef + [R(0)] * (self.prec + 1 - len(self.coef)))
+        self.coefficients(
+            self.coef() + [R(0)] * (self.prec() + 1 - len(self.coef()))
+        )
+
         return self
 
     def multiplicative_inverse(self) -> PowerSeries:
@@ -146,19 +178,28 @@ class PowerSeries():
     def __pow__(self, k: int):
         return [self for _ in range(k)]
 
+def main() -> None:
+    ps1 = PowerSeries([10, 7, 3, 1])
+    print(ps1.__dict__)
+    ps1.coef = [0]
+    print(ps1.__dict__)
+    return None
+
+
 if __name__ == "__main__":
-    power1 = PowerSeries([1, 1, 1], 20)
-    power2 = PowerSeries([1, 0, -1, 2])
-    # print(power1.precision)
-    # print("------------")
+    main()
+    # power1 = PowerSeries([1, 1, 1], 20)
+    # power2 = PowerSeries([1, 0, -1, 2])
+    # # print(power1.precision)
+    # # print("------------")
+    # # print(power1)
+    # # print(power2)
+    # # cauchy = power1.cauchy_product(power2)
+    # # print(cauchy)
+    # mul_inverse = power1.multiplicative_inverse()
     # print(power1)
-    # print(power2)
-    # cauchy = power1.cauchy_product(power2)
-    # print(cauchy)
-    mul_inverse = power1.multiplicative_inverse()
-    print(power1)
-    print("\n\n\n")
-    print(mul_inverse)
-    print("\n\n\n")
-    print(power1 * mul_inverse)
-    # print(cauchy.precision)
+    # print("\n\n\n")
+    # print(mul_inverse)
+    # print("\n\n\n")
+    # print(power1 * mul_inverse)
+    # # print(cauchy.precision)
