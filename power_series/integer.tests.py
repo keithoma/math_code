@@ -104,9 +104,25 @@ def _test(number_of_random_tests: int=100, interval: tuple[int, int]=(-8, 9)) ->
 
     return None
 
+def _warning_check():
+    """Triggers all warnings."""
+    print("The next ones should all throw a warning.")
+    print()
+    print(f"gcd(20, [100, 35]) = {integer.gcd(20, [100, 35])}")
+    print(f"gcd(20) = {integer.gcd(20)}")
+    print(f"gcd([20, 100], 35) = {integer.gcd([20, 100], 35)}")
+    print(f"gcd([20], [100, 35]) = {integer.gcd([20], [100, 35])}")
+    print()
+    print(f"lcm(20, [100, 35]) = {integer.lcm(20, [100, 35])}")
+    print(f"lcm(20) = {integer.lcm(20)}")
+    print(f"lcm([20, 100], 35) = {integer.lcm([20, 100], 35)}")
+    print(f"lcm([20], [100, 35]) = {integer.lcm([20], [100, 35])}")
+
+
 def main(number_of_random_tests=100, interval=(-8, 9)):
     """Executes the tests."""
     _test(number_of_random_tests, interval)
+    _warning_check()
 
 if __name__ == "__main__":
     main()

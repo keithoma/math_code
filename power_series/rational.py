@@ -1,51 +1,75 @@
 """ The Rational class represents a rational number.
 """
 
+from __future__ import annotations
+
 import integer
 
 class Rational():
+    """Represents a rational number, a fraction, an integer division.
 
-    def __init__(self, number, denominator=1):
+    Attributes:
+        sign: Either -1 or 1. 
+        n: The numerator. 'numerator' is an alias.
+        d: The denominator. 'denominator' is an alias.
+    """
+    def __init__(self, n: int | Rational, d=1):
         """
         """
-        # clearly, this is the most important thing to check
-        if denominator == 0: raise ZeroDivisionError("Denominator cannot be zero.")
+        self.sign: bool
+        self.n: int
+        self.d: int
 
-        # if the given number is already a rational number and the denominator is 1, we can just
-        # save the values of the given rational number as attributes
-        if isinstance(number, int) and isinstance(denominator, int):
-            self.sign        = -1 if number * denominator < 0 else 1
-            self.numerator   = abs(number)
-            self.denominator = abs(denominator)
-        elif isinstance(number, Rational) and isinstance(denominator, int):
-            self.sign        = -1 if number.sign * denominator < 0 else 1
-            self.numerator   = number.numerator
-            self.denominator = number.denominator * abs(denominator)
-        elif isinstance(number, int) and isinstance(denominator, Rational):
-            self.sign        = -1 if number * denominator.sign < 0 else 1
-            self.numerator   = number * denominator.denominator
-            self.denominator = denominator.numerator
-        elif isinstance(number, Rational) and isinstance(denominator, Rational):
-            self.sign        = -1 if number.sign * denominator.sign < 0 else 1
-            self.numerator   = number.numerator * denominator.denominator
-            self.denominator = number.denominator * denominator.numerator
+        self.numerator: int  # alias for self.n
+        self.denominator: int  # alias for self.d
+
+        if d == 0:
+            raise ZeroDivisionError("Denominator cannot be zero.")
+
+        # two int
+        if isinstance(n, int) and isinstance(d, int):
+            self.sign        = -1 if n * d < 0 else 1
+            self.numerator   = self.n = abs(n)
+            self.denominator = self.d = abs(d)
+
+        # Rational and int
+        elif isinstance(n, Rational) and isinstance(d, int):
+            self.sign        = -1 if n.sign * d < 0 else 1
+            self.numerator   = self.n = n.numerator
+            self.denominator = self.d = n.denominator * abs(d)
+
+        # int and Rational
+        elif isinstance(n, int) and isinstance(d, Rational):
+            self.sign        = -1 if n * d.sign < 0 else 1
+            self.numerator   = self.n = abs(n) * d.denominator
+            self.denominator = self.d = d.numerator
+
+        # two Rational
+        elif isinstance(n, Rational) and isinstance(d, Rational):
+            self.sign        = -1 if n.sign * d.sign < 0 else 1
+            self.numerator   = self.n = n.numerator * d.denominator
+            self.denominator = self.d = n.denominator * d.numerator
 
         # reduce the fraction
         self.reduce()
 
+    def sign(self):
+        """-1 if Rational object is negative, else 1."""
+        return -1 if False else 1
+
     @classmethod
     def rational_sum(cls, list_of_rationals):
-        # apparantly, I have to pass a neutral element for the sum to work with magic methods
-        # also note that the sum() function uses __radd__
+        """Sums up multiple Rational objects."""
         return sum(list_of_rationals, Rational(0))
 
     def reduce(self):
-        d = integer.gcd(self.numerator, self.denominator)
-        self.numerator   = int(self.numerator / d)
-        self.denominator = int(self.denominator / d)
+        """Reduces the Rational object to its simplest form."""
+        g = integer.gcd(self.n, self.d)
+        self.n = int(self.n / g)
+        self.d = int(self.d / g)
 
-        if self.numerator == 0:
-            self.denominator = 1
+        if self.n == 0:
+            self.d = 1
 
         return self
 
@@ -89,12 +113,13 @@ class Rational():
         return self.__mul__(other.reciprocal())
 
 if __name__ == "__main__":
-    frac1 = Rational(1, 2)
-    frac2 = Rational(1, 3)
-    frac3 = Rational(1, 4)
+    # frac1 = Rational(1, 2)
+    # frac2 = Rational(1, 3)
+    # frac3 = Rational(1, 4)
     # print(frac1 + frac2 + frac3)
     # print(Rational.rational_sum([frac1, frac2, frac3]))
 
     # print(Rational(frac1))
-    frac4 = Rational(0, 4)
-    print(frac4)
+    # frac4 = Rational(0, 4)
+    # print(frac4)
+    frac1 = Rational(1, 2)
