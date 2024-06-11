@@ -5,15 +5,10 @@ Currently implemented:
 * lcm(a, b): least common multiple of a and b or just a; both a and b can be an int or list
 """
 
-# allow three or less lettered variables
-# pylint: disable=C0103
+from typing import Union, Optional
+import warnings
 
-# I think this is a pylint bug with isinstance()
-# pylint: disable=W1116
-
-from typing import Union, List, Optional
-
-IntOrList = Union[int, List[int]]
+IntOrList = Union[int, list[int]]
 
 def _int_gcd(a: int, b: int) -> int:
     """Computes the gcd of two integers."""
@@ -41,12 +36,28 @@ def gcd(a: IntOrList, b: Optional[IntOrList]=None) -> int:
 
     # the other combinations are also supported, but will give a warning
     elif isinstance(a, int) and isinstance(b, list):
+        warnings.warn(
+            "Improper usage of gcd(). a is a int and b is a list "
+            "(expected int or None).",
+            RuntimeWarning)
         result = _list_gcd([a] + b)
     elif isinstance(a, int) and b is None:
+        warnings.warn(
+            "Improper usage of gcd(). a is a int and b is None "
+            "(expected int).",
+            RuntimeWarning)
         result = abs(a)
     elif isinstance(a, list) and isinstance(b, int):
+        warnings.warn(
+            "Improper usage of gcd(). a is a list and b is an int "
+            "(expected None).",
+            RuntimeWarning)
         result = _list_gcd(a + [b])
-    elif isinstance(b, list):
+    elif isinstance(a, list) and isinstance(b, list):
+        warnings.warn(
+            "Improper usage of gcd(). a is a list and b is an list "
+            "(expected None).",
+            RuntimeWarning)
         result = _list_gcd(a + b)
 
     elif not isinstance(a, int | list):
@@ -55,7 +66,7 @@ def gcd(a: IntOrList, b: Optional[IntOrList]=None) -> int:
         print(type(b))
         raise TypeError("Invalid type for second argument. Expected int or list of int.")
 
-    return result
+    return result # pylint: disable=possibly-used-before-assignment
 
 def _int_lcm(a: int, b: int) -> int:
     """Computes the least common multiple of two integers."""
@@ -83,12 +94,28 @@ def lcm(a: IntOrList, b: Optional[IntOrList]=None) -> int:
 
     # the other combinations are also supported, but will give a warning
     elif isinstance(a, int) and isinstance(b, list):
+        warnings.warn(
+            "Improper usage of lcm(). a is a int and b is a list "
+            "(expected int or None).",
+            RuntimeWarning)
         result = _list_lcm([a] + b)
     elif isinstance(a, int) and b is None:
+        warnings.warn(
+            "Improper usage of lcm(). a is a int and b is None "
+            "(expected int).",
+            RuntimeWarning)
         result = abs(a)
     elif isinstance(a, list) and isinstance(b, int):
+        warnings.warn(
+            "Improper usage of lcm(). a is a list and b is an int "
+            "(expected None).",
+            RuntimeWarning)
         result = _list_lcm(a + [b])
     elif isinstance(b, list):
+        warnings.warn(
+            "Improper usage of lcm(). a is a list and b is an list "
+            "(expected None).",
+            RuntimeWarning)
         result = _list_lcm(a + b)
 
     elif not isinstance(a, int | list):
@@ -96,7 +123,7 @@ def lcm(a: IntOrList, b: Optional[IntOrList]=None) -> int:
     elif not isinstance(b, int | list | None):
         raise TypeError("Invalid type for the second argument. Expected int or list of int.")
 
-    return result
+    return result  # pylint: disable=possibly-used-before-assignment
 
 def main():
     """Tests the functions implemented."""

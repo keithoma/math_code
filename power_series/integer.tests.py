@@ -1,14 +1,12 @@
 """ Tests the functions implemented in integer.py.
 """
 
-# set pylint to allow variable names under three letters
-# pylint: disable=C0103
+from typing import Union, Optional
 
-from typing import Union, List, Optional
 import numpy as np
 import integer
 
-IntOrList = Union[int, List[int]]
+IntOrList = Union[int, list[int]]
 
 def _make_list(a: IntOrList, b: Optional[IntOrList]=None) -> list:
     """Combines the values of a and b to a single list."""
@@ -24,7 +22,7 @@ def _make_list(a: IntOrList, b: Optional[IntOrList]=None) -> list:
         result = a + b
     elif isinstance(a, list) and b is None:
         result = a
-    return result
+    return result  # pylint: disable=possibly-used-before-assignment
 
 def _nth_test(n: int, a: IntOrList, b: Optional[IntOrList]=None)  -> int:
     """Executes a single test of gcd() and lcm()."""
@@ -46,6 +44,7 @@ def _nth_test(n: int, a: IntOrList, b: Optional[IntOrList]=None)  -> int:
 
     return n + 1
 
+# pylint: disable-next=useless-return
 def _test(number_of_random_tests: int=100, interval: tuple[int, int]=(-8, 9)) -> None:
     """Executes a batch of tests. For internal use only."""
     # counter for n-th test
@@ -103,7 +102,6 @@ def _test(number_of_random_tests: int=100, interval: tuple[int, int]=(-8, 9)) ->
 
         n = _nth_test(n, a, b)
 
-    # pylint: disable=useless-return
     return None
 
 def main(number_of_random_tests=100, interval=(-8, 9)):
