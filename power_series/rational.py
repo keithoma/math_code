@@ -147,7 +147,8 @@ class Rational():
         """Division for two Rational objects."""
         return self.__mul__(other.reciprocal())
 
-if __name__ == "__main__":
+
+def main():
     # frac1 = Rational(1, 2)
     # frac2 = Rational(1, 3)
     # frac3 = Rational(1, 4)
@@ -159,3 +160,6 @@ if __name__ == "__main__":
     # print(frac4)
     frac1 = Rational(1, 2)
     print(frac1)
+
+if __name__ == "__main__":
+    main()
