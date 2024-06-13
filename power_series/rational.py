@@ -19,6 +19,7 @@ class Rational():
         self._numerator: int
         self._denominator: int
 
+        # TODO: I need to exclude the case where the denominator is R(0)
         if bottom == 0:
             raise ZeroDivisionError("Denominator cannot be zero.")
 
@@ -88,6 +89,7 @@ class Rational():
         """Returns the denominator with the appropriate sign."""
         return self._sign * self._denominator
 
+    # sometimes we want to use the shorter alias because they are more readable
     n = numerator
     signed_n = signed_numerator
     d = denominator
@@ -122,15 +124,15 @@ class Rational():
 
     def __pos__(self) -> Rational:
         """Returns a copy of the object."""
-        return Rational(self.sign * self.n, self.d)
+        return Rational(self.signed_numerator, self.denominator)
 
     def __neg__(self) -> Rational:
         """Returns a copy of the object, but the 'sign' is switched."""
-        return Rational(- self.sign * self.n, self.d)
+        return Rational(- self.signed_numerator, self.denominator)
 
     def __abs__(self) -> Rational:
         """Returns a copy of the object, but the sign is positive."""
-        return Rational(self.n, self.d)
+        return Rational(self.numerator, self.denominator)
 
     def __add__(self, other: Rational) -> Rational:
         """Addition for two Rational objects."""
