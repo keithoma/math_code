@@ -59,14 +59,11 @@ class Rational():
         """Reduces the Rational object to its simplest form."""
         if self.n == 0:
             self.d = 1
-            return
+            return None
 
         g = integer.gcd(self.n, self.d)
         self.n = self.n // g
         self.d = self.d // g
-
-        if self.n == 0:
-            self.d = 1
 
         return None
 
@@ -149,17 +146,14 @@ class Rational():
 
 
 def main():
-    # frac1 = Rational(1, 2)
-    # frac2 = Rational(1, 3)
-    # frac3 = Rational(1, 4)
-    # print(frac1 + frac2 + frac3)
-    # print(Rational.rational_sum([frac1, frac2, frac3]))
+    """Tests the class and methods implemented in this file."""
+    R = Rational
+    frac1 = R(1, 2)
+    frac2 = R(-2, 5)
+    frac3 = R(frac1, 3)
+    frac4 = R(-7, frac2)
+    frac5 = R(frac2, frac1)
 
-    # print(Rational(frac1))
-    # frac4 = Rational(0, 4)
-    # print(frac4)
-    frac1 = Rational(1, 2)
-    print(frac1)
 
 if __name__ == "__main__":
     main()
