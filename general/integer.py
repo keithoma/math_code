@@ -83,6 +83,8 @@ def lcm(a: IntOrList, b: Optional[IntOrList] = None) -> int:
 
 def main():
     """Tests the functions implemented."""
+    print(gcd(0, 13))
+    print("--------------------")
     print()
     print(f"_int_gcd(24, 300) = {_int_gcd(24, 300)}")
     print(f"_list_gcd(20, 100, 35) = {_list_gcd([20, 100, 35])}")
