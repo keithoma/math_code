@@ -13,44 +13,53 @@ class Rational():
         d: The denominator. 'denominator' is an alias.
     """
     # pylint: disable-next=useless-return
-    def __init__(self, top: int | Rational, bottom: int | Rational = 1) -> None:
+    def __init__(self, top: int | Rational, bot: int | Rational = 1) -> None:
         """Constructs a Rational object."""
         self._sign: int
         self._numerator: int
         self._denominator: int
 
-        # TODO: I need to exclude the case where the denominator is R(0)
-        if bottom == 0:
-            raise ZeroDivisionError("Denominator cannot be zero.")
-
-        # two int
-        if isinstance(top, int) and isinstance(bottom, int):
-            self._sign = -1 if top * bottom < 0 else 1
-            self._numerator = abs(top)
-            self._denominator = abs(bottom)
-
-        # Rational and int
-        elif isinstance(top, Rational) and isinstance(bottom, int):
-            self._sign = -1 if top.sign * bottom < 0 else 1
-            self._numerator = top.n
-            self._denominator = top.d * abs(bottom)
-
-        # int and Rational
-        elif isinstance(top, int) and isinstance(bottom, Rational):
-            self._sign = -1 if top * bottom.sign < 0 else 1
-            self._numerator = abs(top) * bottom.d
-            self._denominator = bottom.n
-
-        # two Rational
-        elif isinstance(top, Rational) and isinstance(bottom, Rational):
-            self._sign = -1 if top.sign * bottom.sign < 0 else 1
-            self._numerator = top.n * bottom.d
-            self._denominator = top.d * bottom.n
+        # handle the input and initalize the attributes
+        self._initialize(top, bot)
 
         # reduce the fraction
         self._reduce()
 
         return None
+
+    def _initialize(self, top: int | Rational, bot: int | Rational) -> None:
+        """Initializes the attributes of the Rational object."""
+        # bot cannot be zero
+        if top == 0 and bot == 1:
+            self._sign        = 1
+            self._numerator   = 0
+            self._denominator = 1
+        elif bot == 0 or bot == Rational(0):
+            raise ZeroDivisionError("Denominator cannot be zero.")
+
+        if isinstance(top, int):
+            if isinstance(bot, int):
+                self._sign        = -1 if top * bot < 0 else 1
+                self._numerator   = abs(top)
+                self._denominator = abs(bot)
+                return None
+            if isinstance(bot, Rational):
+                self._sign        = -1 if top * bot.sign < 0 else 1
+                self._numerator   = abs(top) * bot.d
+                self._denominator = bot.n
+                return None
+
+        if isinstance(top, Rational):
+            if isinstance(bot, int):
+                self._sign        = -1 if top.sign * bot < 0 else 1
+                self._numerator   = top.n
+                self._denominator = top.d * abs(bot)
+                return None
+            if isinstance(bot, Rational):
+                self._sign        = -1 if top.sign * bot.sign < 0 else 1
+                self._numerator   = top.n * bot.d
+                self._denominator = top.d * bot.n
+                return None
 
     def _reduce(self) -> None:
         """Reduces the Rational object to its simplest form."""
