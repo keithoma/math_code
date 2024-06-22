@@ -1,4 +1,4 @@
-""" The Rational class represents a rational number.
+"""The Rational class represents a rational number.
 """
 
 from __future__ import annotations
