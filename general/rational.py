@@ -128,7 +128,7 @@ class Rational():
         return Rational(top, bot)
 
     def __sub__(self, other: Rational):
-        return self - other
+        return self + (-other)
 
     def __mul__(self, other: Rational) -> Rational:
         """Multiplication for two Rational objects."""
