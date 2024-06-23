@@ -206,7 +206,7 @@ def gcd(a: int, b: int) -> int:
         a, b = b, a % b
     return abs(a)
 
-def main():
+def main() -> None:
     """Tests the class and methods implemented in this file."""
     R = Rational # a short hand we will use often
     print(R(3, 5))

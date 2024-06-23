@@ -28,12 +28,12 @@ class Matrix():
 
     ## Properties
     @property
-    def row(i: int):
+    def row(i: int) -> list[Number]:
         # TODO:
         pass
 
     @property
-    def column(j: int):
+    def column(j: int) -> list[Number]:
         # TODO:
         pass
 
@@ -108,11 +108,11 @@ class Matrix():
         pass
 
     ## Instance Methods
-    def scalar_multiplication(self, scalar: Number):
+    def scalar_multiplication(self, scalar: Number) -> Matrix:
         # TODO:
         pass
 
-def main():
+def main() -> None:
     # check for typing
     faulty_raws = [
         "a",              # not even a list
