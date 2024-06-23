@@ -107,6 +107,11 @@ class Matrix():
         # TODO: implement this
         pass
 
+    ## Instance Methods
+    def scalar_multiplication(self, scalar: Number):
+        # TODO:
+        pass
+
 def main():
     # check for typing
     faulty_raws = [
