@@ -113,11 +113,11 @@ class Matrix():
     ## Instance Methods
     def row(self, i: int) -> list[Number]:
         """Returns the i-th row."""
-        # TODO:
+        return self._data[i - 1]
 
     def column(self, j: int) -> list[Number]:
         """Returns the j-th column."""
-        # TODO:
+        return [row[j - 1] for row in self._data]
 
     def cell(self, i: int, j:int) -> Number:
         """Returns the entry at i-th row and j-th column."""
@@ -176,6 +176,10 @@ def main() -> None:
     # check for cell
     print(m1)
     print(f"Shape: {m1.shape} | Is Square? = {m1.is_square}")
+    for i in range(1, m1.shape[0] + 1):
+        print(f"{i}-th row is {m1.row(i)}")
+        print(f"{i}-th column is {m1.column(i)}")
+    print()
     print(m1.cell(1, 1))
     print(m1.cell(1, 2))
     print(m1.cell(2, 1))
