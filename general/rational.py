@@ -187,6 +187,21 @@ class Rational():
         """Returns True if the Rational number is not zero."""
         return self.n != 0
 
+    ### Class Methods
+    @classmethod
+    def sum(cls, list_of_rationals: list[Rational]) -> Rational:
+        """Summation for a list of Rational objects."""
+        return sum(list_of_rationals, Rational(0))
+
+    @classmethod
+    def prod(cls, list_of_rationals: list[Rational]) -> Rational:
+        """Product for a list of Rational objects."""
+        top, bot = 1, 1
+        for number in list_of_rationals:
+            top = top * number.numerator
+            bot = bot * number.denominator
+        return Rational(top, bot)
+
     ### Private Methods
     def _reduce(self) -> None:
         """Reduces the Rational object to its simplest form."""
@@ -210,6 +225,13 @@ def main() -> None:
     """Tests the class and methods implemented in this file."""
     R = Rational # a short hand we will use often
     print(R(3, 5))
+
+    list_of_rationals = [R(1), R(3, 2), R(1, 3)]
+    sum_of_rationals = R.sum(list_of_rationals)
+    prod_of_rationals = R.prod(list_of_rationals)
+    print(list_of_rationals)
+    print(sum_of_rationals)
+    print(prod_of_rationals)
 
 if __name__ == "__main__":
     main()
