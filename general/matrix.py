@@ -130,7 +130,7 @@ class Matrix():
 
     def transpose(self) -> Matrix:
         """Returns the transpose."""
-        # TODO:
+        return Matrix(list(map(list, zip(*self._data))))
 
 def main() -> None:
     """Tests the class and methods implemented in this file."""
@@ -192,6 +192,8 @@ def main() -> None:
     print(m1)
     print(num1)
     print(m1.scalar_multiplication(num1))
+    print("\n" + "-" * 80 + "\n\n")
+    print(m1.transpose())
 
 if __name__ == "__main__":
     main()
