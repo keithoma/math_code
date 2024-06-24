@@ -125,7 +125,8 @@ class Matrix():
 
     def scalar_multiplication(self, scalar: Number) -> Matrix:
         """Returns the product of the matrix and the scalar."""
-        # TODO:
+        return Matrix(
+            [[scalar * cell for cell in vector] for vector in self._data])
 
     def transpose(self) -> Matrix:
         """Returns the transpose."""
@@ -173,7 +174,7 @@ def main() -> None:
     print(m4)
     print("\n" + "-" * 80 + "\n\n")
 
-    # check for cell
+    # check for row(), column(), and cell()
     print(m1)
     print(f"Shape: {m1.shape} | Is Square? = {m1.is_square}")
     for i in range(1, m1.shape[0] + 1):
@@ -184,6 +185,13 @@ def main() -> None:
     print(m1.cell(1, 2))
     print(m1.cell(2, 1))
     print(m1.cell(2, 2))
+    print("\n" + "-" * 80 + "\n\n")
+
+    # check for methods
+    num1 = R(1, 2)
+    print(m1)
+    print(num1)
+    print(m1.scalar_multiplication(num1))
 
 if __name__ == "__main__":
     main()
